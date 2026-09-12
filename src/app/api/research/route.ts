@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
         const taskId = await createResearch(user.id, title, goal, sources, maxSites, outputFormat)
 
-        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, taskId)
+        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, {taskId, title, goal, sources, maxSites, outputFormat})
 
         console.log(jobb.returnvalue)
         // await researchQueue.add(RESEARCH_QUEUE_NAME, taskId, {
