@@ -18,7 +18,6 @@ export default function Page() {
   const [title, setTitle] = useState('');
   const [goal, setGoal] = useState('');
   const [sources, setSources] = useState('');
-  const [maxSites, setMaxSites] = useState(20);
   const [outputFormat, setOutputFormat] = useState('');
 
   const [status, setStatus] = useState<string>('Idle');
@@ -26,15 +25,15 @@ export default function Page() {
 
   const startResearch = async () => {
     console.log('/n/n/n')
-    console.log(title, goal, sources, maxSites, outputFormat)
+    console.log(title, goal, sources, outputFormat)
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) throw userError || new Error("User not found");
-      
+
       const res = await fetch('api/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify({ user, title, goal, sources, maxSites, outputFormat })
+        body: JSON.stringify({ user, title, goal, sources, outputFormat })
       })
 
       if (!res.ok) {
@@ -105,16 +104,6 @@ export default function Page() {
               />
             </div>
 
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ display: 'block', marginBottom: '4px', fontSize: '0.85rem', fontWeight: 'bold' }}>Maximum websites</label>
-              <input
-                type="number"
-                value={maxSites}
-                onChange={(e) => setMaxSites(Number(e.target.value))}
-                style={{ width: '100%', border: '1px solid black', padding: '6px', fontSize: '0.875rem', boxSizing: 'border-box' }}
-              />
-            </div>
-
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '0.85rem', fontWeight: 'bold' }}>Output format</label>
               <input
@@ -133,11 +122,27 @@ export default function Page() {
             </button>
           </div>
 
-          <div style={{ marginTop: 'auto', borderTop: '2px solid black', paddingTop: '16px', height: '175px', boxSizing: 'border-box', fontSize: '0.85rem', lineHeight: '1.4' }}>
+          <div style={{ marginTop: 'auto', borderTop: '2px solid black', paddingTop: '16px', height: '230px', boxSizing: 'border-box', fontSize: '0.85rem', lineHeight: '1.4' }}>
             <p style={{ fontWeight: 'bold', margin: '0 0 6px 0' }}>Example:</p>
-            <p style={{ margin: '0 0 4px 0' }}><strong>Title:</strong> Instagram CRM market</p>
-            <p style={{ margin: '0 0 4px 0' }}><strong>Goal:</strong> Find 20 competing products and compare pricing, features, integrations.</p>
-            <p style={{ margin: '0 0 4px 0' }}><strong>Sources:</strong> g2.com, producthunt.com</p>
+            <p style={{ margin: '0 0 4px 0' }}><strong>Title:</strong> SaaS CRM Competitor Research</p>
+            <p style={{ margin: '0 0 4px 0' }}><strong>Goal:</strong>
+               Compare the selected CRM products.
+
+              For each product, find:
+              1. Main target audience
+              2. Starting monthly price
+              3. Main CRM features
+              4. Important integrations
+              5. Whether a free trial or free plan is available
+
+              Use only information found on the provided websites.
+              Do not guess missing information.
+
+              Return structured data for each company and include the source URL for every major claim.
+            </p>
+            <p style={{ margin: '0 0 4px 0' }}><strong>Sources:</strong> https://www.hubspot.com/
+              https://www.pipedrive.com/
+              https://www.close.com/</p>
             <p style={{ margin: '0' }}><strong>Output:</strong> Detailed report</p>
           </div>
         </div>

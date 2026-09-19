@@ -4,7 +4,7 @@ import { Worker } from 'bullmq';
 import { redisConnection, RESEARCH_QUEUE_NAME } from '@/lib/queue';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { END, START, StateGraph, Annotation, MessagesAnnotation, MemorySaver, interrupt, Command } from "@langchain/langgraph";
-import { SystemMessage, HumanMessage } from "@langchain/core/messages";
+import { SystemMessage, HumanMessage, ToolMessage, AIMessage } from "@langchain/core/messages";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { tool } from "@langchain/core/tools";
 import { ChatOpenAI } from "@langchain/openai";
@@ -17,146 +17,277 @@ const YOUR_SEARCHAPI_KEY = process.env.YOUR_SEARCHAPI_KEY;
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env.local') });
 
 
+import { PlaywrightCrawler, Configuration } from "crawlee";
+Configuration.getGlobalConfig().set("persistStorage", false);
 
-// const analyseCites = tool(
-//     async ({ links }) => {
-//         const prompt = new HumanMessage(`
-//             позаходи в всі посилання в ${links} , перевір чи вони відповідають до теми та мети,
-//             якщо ні, то познач що лінк не підходить,
-//             якщо підходять, то витягни всю інформацію яка потрібна(потрібна інформація позначена в меті)
-//             якщо данне посилання, це посилання на ревюшник, то надай мені ті всі сайти, позаходи там на кожен зазначений сайт та дай всю інформацію яка зазначена в меті пошуку`)
+let oldMarkdown = ""
+async function scrapePage(url: string, newie: boolean): Promise<string> {
+    let cleanMarkdown = "";
 
+    // 1. Вимикаємо збереження файлів у storage через глобальний конфіг
+    Configuration.getGlobalConfig().set("persistStorage", false);
 
-//     },
-//     {
-//         name: '',
-//         description: '',
-//         schema: z.object({
-//             links: z.array(
-//                 z.object({
-//                     url: z.string().url().describe('Пряме посилання на сторінку')
-//                 })
-//             ).describe("список знайдених релевантних посилань")
-//         })
-//     }
-// )
+    const crawler = new PlaywrightCrawler({
+        maxRequestsPerCrawl: 1,
 
+        async requestHandler({ page }) {
+            await page.waitForLoadState("domcontentloaded");
 
+            cleanMarkdown = await page.evaluate(`
+        (() => {
+          // 1. Видаляємо технічне сміття
+          const elementsToRemove = [
+            "script", "style", "noscript", "iframe", "svg", ".cookie-banner", "#cookie-consent", "noindex"
+          ];
+          elementsToRemove.forEach((selector) => {
+            document.querySelectorAll(selector).forEach((el) => el.remove());
+          });
 
-// const planner = tool(
-//     async ({ }) => {
+          // Очищення тільки UTM-міток без обрізання query-параметрів та якорів
+          const cleanUrl = (rawUrl) => {
+            try {
+              const u = new URL(rawUrl);
+              
+              // Видаляємо лише utm_* параметри аналітики
+              const keysToDelete = [];
+              u.searchParams.forEach((_, key) => {
+                if (key.startsWith("utm_")) {
+                  keysToDelete.push(key);
+                }
+              });
+              keysToDelete.forEach((key) => u.searchParams.delete(key));
 
-//     },
-//     {
-//         name: '',
-//         description: '',
-//         schema: z.object({
-//             currentMaxSites: z.number().describe('Вкажи кількість сайтів яких потрібно шукати')
-//         })
-//     }
-// )
-
-
-const googleSearchNode = async (state: { query: number; currentMaxSites: number; }) => {
-    console.log('[NODE] started googe search')
-    try {
-        const response = await axios.get('https://www.searchapi.io/api/v1/search', {
-            params: {
-                api_key: YOUR_SEARCHAPI_KEY,
-                engine: 'google',
-                q: state.query,
-                num: state.currentMaxSites,
-            },
-        });
-        const organicResults = response.data.organic_results || []
-
-        const filtered = organicResults.map((item: { link: string }) =>
-            item.link
-        )
-        console.log(filtered)
-        return new Command({
-            update: {
-                notVisitedUrls: filtered
+              return u.href; // Повертає повний URL (з query-параметрами та якорями)
+            } catch {
+              return rawUrl;
             }
-        })
+          };
 
-    } catch (error) {
-        console.log(error)
-        return ({ status: 'error', message: `[ERROR]: ${error}` })
-    }
-}
+          const seenLinks = new Set();
 
-const googleQueryWriter = tool(
-    async ({ query, maxSites }) => {
-        console.log(`[QUERY] ${query}`)
-        return new Command({
-            update: {
-                query: query,
-                currentMaxSites: maxSites,
-                targetCount: maxSites
+          // 2. Обробка посилань
+          document.querySelectorAll("a[href]").forEach((a) => {
+            const rawText = a.innerText || a.textContent || a.getAttribute("aria-label") || "";
+            const text = rawText.replace(/\\s+/g, " ").trim();
+            let href = a.href;
+
+            const isSocial = /(facebook|twitter|instagram|linkedin|youtube|github|t.me)\\.com/i.test(href);
+            const isValid = text.length > 1 && href.startsWith("http") && !isSocial;
+
+            if (isValid) {
+              const sanitizedUrl = cleanUrl(href);
+              const linkKey = text.toLowerCase() + "|" + sanitizedUrl;
+
+              if (seenLinks.has(linkKey)) {
+                a.replaceWith(document.createTextNode(" " + text + " "));
+              } else {
+                seenLinks.add(linkKey);
+                a.replaceWith(document.createTextNode(" [" + text + "](" + sanitizedUrl + ") "));
+              }
+            } else if (text) {
+              a.replaceWith(document.createTextNode(" " + text + " "));
             }
-        })
-    },
-    {
-        name: 'MakeUpGoogleQuery',
-        description: 'Створити один запит в гугл для отримання посилань для подальшого парсингу інформації',
-        schema: z.object({
-            query: z.string().describe('напиши один короткий та простий запит для пошуку в гугл (наприклад: шукаю рецепт для вишневого пирога)'),
-            maxSites: z.number().describe('кількість сайтів по яких будем робити дослідження (наприклад: 5)')
-        })
-    }
-)
+          });
 
-const tools = [googleQueryWriter]
-const model = new ChatOpenAI({ modelName: "gpt-4o" }).bindTools(tools, {
-    parallel_tool_calls: false
-})
+          // 3. Обробка заголовків
+          document.querySelectorAll("h1, h2, h3").forEach((h) => {
+            const level = h.tagName.toLowerCase() === "h1" ? "# " : h.tagName.toLowerCase() === "h2" ? "## " : "### ";
+            h.replaceWith(document.createTextNode("\\n\\n" + level + (h.textContent ? h.textContent.trim() : "") + "\\n"));
+          });
 
+          // 4. Очищений текст
+          return document.body.innerText
+            .split("\\n")
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0)
+            .join("\\n");
+        })()
+      `);
+        },
+    });
 
-async function callModel(state: typeof MessagesAnnotation.State) {
-    const response = await model.invoke(state.messages)
-    return { messages: [response] }
+    await crawler.run([url]);
+    newie ? oldMarkdown = cleanMarkdown : null
+    return cleanMarkdown;
 }
 
 const AgentState = Annotation.Root({
     ...MessagesAnnotation.spec,
 
-    currentMaxSites: Annotation<number>(),
-    targetCount: Annotation<number>(),
-    loopCount: Annotation<number>(),
-    query: Annotation<string>(),
+    links: Annotation<string[]>(),
+    steps: Annotation<Array<{ id: string; goal: string }>>(),
 
-    notVisitedUrls: Annotation<string[]>(),
-
-    visitedUrls: Annotation<string[]>({
-        reducer: (currentState, updateValue) =>
-            Array.from(new Set([...currentState, ...updateValue])),
-        default: () => [],
+    secondaryLink: Annotation<{ url: number | null, step: number | null, secondUrl: string | null }>({
+        default: () => ({ url: null, step: null, secondUrl: null }),
+        reducer: (prev, next) => next ?? prev,
     }),
 
-    validResults: Annotation<string[]>({
-        reducer: (currentState, updateValue) =>
-            Array.from(new Set([...currentState, ...updateValue])),
+    currentLink: Annotation<number>({
+        default: () => 0,
+        reducer: (prev, next) => next ?? prev,
+    }),
+
+    currentStep: Annotation<number>({
+        default: () => 0,
+        reducer: (prev, next) => next ?? prev,
+    }),
+
+    stepInfo: Annotation<{ url: string, step_id: string, info: string }[]>({
+        reducer: (current, update) => {
+            const newItems = Array.isArray(update) ? update : [update];
+            return current.concat(newItems);
+        },
         default: () => [],
     }),
 });
 
+async function planner(state: typeof AgentState.State) {
+    const baseModel = new ChatOpenAI({
+        modelName: "gpt-4o-mini",
+        temperature: 0
+    });
+    const structmodel = baseModel.withStructuredOutput(
+        z.object({
+            steps: z.array(
+                z.object({
+                    id: z.string(),
+                    goal: z.string()
+                })
+            )
+        })
+    )
+
+    const humanMsg = new HumanMessage(
+        `тобі дано певний список що потрібно найти, сформуй по тому списку план (накприклад:` +
+        `\n{
+      "id": "pricing",
+      "goal": "Find current pricing plans"
+    },
+    {
+      "id": "features",
+      "goal": "Identify main product features"
+    },
+    {
+      "id": "audience",
+      "goal": "Identify target customer"
+    },....`+
+        `план мусить бути чіткий та покроковий. поки не роби кроку де пише про джерела`
+    )
+
+    const response = await structmodel.invoke([...state.messages, humanMsg])
+
+    console.log(response)
+
+    return {
+        steps: response.steps,
+        messages: [new AIMessage(JSON.stringify(response))]
+    };
+}
+
+async function stepsController(state: typeof AgentState.State) {
+    console.log('[STEPS CONTROLLER] Started work')
+    console.log(state.steps[state.currentStep])
+    const { id, goal } = state.steps[state.currentStep]
+    const currentLink = state.secondaryLink.secondUrl == null ? state.links[state.currentLink] : state.secondaryLink.secondUrl
+    console.log(currentLink)
+    //const parser = await crawler.run([state.links[state.currentLink - 1]])
+    const parser = state.secondaryLink.secondUrl == null ? state.currentStep == 0 ? await scrapePage(currentLink, true) : oldMarkdown : await scrapePage(currentLink, false)
+    //console.log(goal + '\n\n')
+    //console.log(parser)
+
+    const baseModel = new ChatOpenAI({
+        modelName: "gpt-4o-mini",
+        temperature: 0
+    });
+    const structmodel = baseModel.withStructuredOutput(
+        z.object({
+            reasoning: z
+                .string()
+                .describe(
+                    `Крок-за-кроком аналіз вмісту: чи є тут безпосередньо потрібна інформація відповідно до мети(${goal}), чи є лише посилання на неї, чи немає нічого з цього.`
+                ),
+            status: z
+                .enum(["content_found", "link_found", "not_found"])
+                .describe(
+                    "content_found — якщо на сторінці Є конкретні дані; link_found — якщо конкретних даних немає, але Є релевантне посилання; not_found — якщо немає ні того, ні іншого."
+                ),
+            extractedContent: z
+                .string()
+                .nullable()
+                .describe("Знайдена КОНКРЕТНА інформація згідно з метою, не потрібно другорядної. ВСЕ ЧІТКО ТА СТРУКТУРОВАНО (заповнюй ТІЛЬКИ якщо status === 'content_found', інакше null)"),
+            relevantUrl: z
+                .string()
+                .nullable()
+                .describe("Точний URL із тексту, на якому швидше за все буде потрібна нам інформація (заповнюй ТІЛЬКИ якщо status === 'link_found', інакше null)"),
+        })
+    )
+
+    const humanMsg = new HumanMessage(
+        `подивись чи нище є потрібна інформація відповідно до зарашньої мети:'${goal}' або посилання де скоріш за все вона буде:` +
+        `\n\n ${parser}`
+    )
+
+    const response = await structmodel.invoke([humanMsg])
+    console.log(response)
+
+    if (response.status == 'content_found' || response.status == 'not_found') {
+        if (state.currentStep < state.steps.length - 1) {
+            return new Command({
+                update: {
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                    secondaryLink: { url: null, step: null, secondUrl: null },
+                    currentStep: state.currentStep + 1
+                },
+                goto: 'stepsController'
+            })
+        } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
+            return new Command({
+                update: {
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                    secondaryLink: { url: null, step: null, secondUrl: null },
+                    currentLink: state.currentLink + 1,
+                    currentStep: 0
+                },
+                goto: 'stepsController'
+            })
+        } else if (state.currentLink >= state.links.length - 1) {// ----------------------------------------------------------------------------------
+            console.log('==================== FINALISED ====================')
+            console.log(state.stepInfo)
+            console.log('===================================================')
+            return new Command({
+                update: {
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                    secondaryLink: { url: null, step: null, secondUrl: null },
+                    currentLink: 0,
+                    currentStep: 0
+                },
+                //goto: 'stepsController'// ----------------------------------------------------------------------------------
+            })
+        }
+    } else if (response.status == 'link_found') {
+        return new Command({
+            update: {
+                secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl }
+            },
+            goto: 'stepsController'
+        })
+    }
+
+}
+
+
 const graph = new StateGraph(AgentState)
-    .addNode('googleSearchNode', googleSearchNode)
-    .addNode('tool', new ToolNode(tools))
-    .addNode('callModel', callModel)
-    .addEdge(START, 'callModel')
-    .addEdge('callModel', 'tool')
-    .addEdge('tool', 'googleSearchNode')
-    .addEdge('googleSearchNode', END)
+    .addNode('planner', planner)
+    .addNode('stepsController', stepsController)
+    .addEdge(START, 'planner')
+    .addEdge('planner', 'stepsController')
 
 
 const checkpointer = new MemorySaver()
 const app = graph.compile({ checkpointer })
 
 const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
-    console.log(`WORKER STARTED: ${job.data}`)
-    console.log(`Найди ${job.data.maxSites} сайтів по темі ${job.data.title}, з метою ${job.data.goal}`)
+    console.log(`WORKER STARTED: ${job.data.taskId}`)
     try {
         const { error } = await supabaseAdmin
             .from('research_tasks')
@@ -172,32 +303,30 @@ const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
 
     const inputPayload = {
         messages: [
-            new SystemMessage("Ти шукач посилань на певну тему та з певною метою. Твоя мета найти відповідні сайти. Спочатку збери посилання, потім дай мені відповідь."),
-            new HumanMessage(`Найди ${job.data.maxSites} сайтів по темі ${job.data.title}, з метою ${job.data.goal}`)
+            new SystemMessage("Ти шукач певної інформації на даної інформації на даних сайтах."),
+            new HumanMessage(`${job.data.goal}, \n\n Джерела: ${job.data.sources}`),
         ]
     };
     const config = {
         configurable: {
             thread_id: job.data.taskId
-        }
+        },
     };
 
-    const currentState = await app.invoke(inputPayload, config);
+    const urls = job.data.sources.split(/\s+/).filter(Boolean);
+    console.log(urls)
+
+    const currentState = await app.invoke({
+        ...inputPayload,
+
+        links: urls,
+
+    }, config);
 
     console.log("\n--- Повний лог повідомлень ---");
     currentState.messages.forEach(msg => {
         console.log(`[${msg._getType()}]:`, msg.content);
     });
-
-    // try {
-    //     plannerWorker(`test req : ${job.data}`)
-    // } catch (error) {
-    //     console.error('Error planning cites: ', error);
-    //     throw error;
-    // }
-
-
-
 },
     { connection: redisConnection }
 )

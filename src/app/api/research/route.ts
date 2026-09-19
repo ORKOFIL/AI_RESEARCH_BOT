@@ -5,11 +5,11 @@ import { researchQueue, RESEARCH_QUEUE_NAME } from '@/lib/queue';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { user, title, goal, sources, maxSites, outputFormat } = body;
+        const { user, title, goal, sources, outputFormat } = body;
 
-        const taskId = await createResearch(user.id, title, goal, sources, maxSites, outputFormat)
+        const taskId = await createResearch(user.id, title, goal, sources, outputFormat)
 
-        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, {taskId, title, goal, sources, maxSites, outputFormat})
+        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, {taskId, title, goal, sources, outputFormat})
 
         console.log(jobb.returnvalue)
         // await researchQueue.add(RESEARCH_QUEUE_NAME, taskId, {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         // })
 
         return NextResponse.json(
-            { success: true, data: { title, goal, sources, maxSites, outputFormat } },
+            { success: true, data: { title, goal, sources, outputFormat } },
             { status: 201 }
         );
     } catch (error) {
