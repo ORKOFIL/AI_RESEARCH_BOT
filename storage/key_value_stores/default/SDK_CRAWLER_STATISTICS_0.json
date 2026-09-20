@@ -1,0 +1,50 @@
+{
+  "requestsFinished": 0,
+  "requestsFailed": 1,
+  "requestsRetries": 1,
+  "requestsFailedPerMinute": 42,
+  "requestsFinishedPerMinute": 0,
+  "requestMinDurationMillis": null,
+  "requestMaxDurationMillis": 0,
+  "requestTotalFailedDurationMillis": 217,
+  "requestTotalFinishedDurationMillis": 0,
+  "crawlerStartedAt": "2026-09-20T17:05:06.987Z",
+  "crawlerFinishedAt": "2026-09-20T17:05:08.276Z",
+  "statsPersistedAt": "2026-09-20T17:05:08.277Z",
+  "crawlerRuntimeMillis": 1417,
+  "crawlerLastStartTimestamp": 1789923906860,
+  "requestRetryHistogram": [
+    null,
+    null,
+    null,
+    1
+  ],
+  "statsId": "0",
+  "requestAvgFailedDurationMillis": 217,
+  "requestAvgFinishedDurationMillis": null,
+  "requestTotalDurationMillis": 217,
+  "requestsTotal": 1,
+  "requestsWithStatusCode": {},
+  "errors": {
+    "C:\\Users\\USER\\Desktop\\ai_research_bot\\node_modules\\@crawlee\\playwright\\internals\\utils\\playwright-utils.js:168:17": {
+      "missing error code": {
+        "Error": {
+          "page.goto: net::ERR_EMPTY_RESPONSE at https://www.hubsasfasdfafpot.com/": {
+            "count": 1
+          }
+        }
+      }
+    }
+  },
+  "retryErrors": {
+    "C:\\Users\\USER\\Desktop\\ai_research_bot\\node_modules\\@crawlee\\playwright\\internals\\utils\\playwright-utils.js:168:17": {
+      "missing error code": {
+        "Error": {
+          "page.goto: net::ERR_EMPTY_RESPONSE at https://www.hubsasfasdfafpot.com/": {
+            "count": 3
+          }
+        }
+      }
+    }
+  }
+}

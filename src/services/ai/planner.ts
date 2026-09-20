@@ -1,67 +1,49 @@
-import axios from 'axios';
-import { tool } from "@langchain/core/tools";
+import { HumanMessage, AIMessage } from '@langchain/core/messages';
+import { AgentState } from "@/lib/agentState";
+import { ChatOpenAI } from "@langchain/openai";
 import * as z from "zod";
-import { HumanMessage, ToolMessage } from '@langchain/core/messages';
-import { Command } from "@langchain/langgraph";
 
-const YOUR_SEARCHAPI_KEY = process.env.YOUR_SEARCHAPI_KEY;
+const baseModel = new ChatOpenAI({
+    modelName: "gpt-4o-mini",
+    temperature: 0
+});
 
-export const googleSearchWorker = tool(
-    async ({ query, maxSites }, config) => {
-        console.log('[WORKER] started googe search')
-        try {
-            const toolCallId = config.toolCall?.id;
+export async function planner(state: typeof AgentState.State) {
 
-            if (!toolCallId) {
-                throw new Error("Missing toolCall.id in config");
-            }
-
-            const response = await axios.get('https://www.searchapi.io/api/v1/search', {
-                params: {
-                    api_key: YOUR_SEARCHAPI_KEY,
-                    engine: 'google',
-                    q: query,
-                    num: maxSites,
-                },
-            });
-            const organicResults = response.data.organic_results || []
-
-            const filtered = organicResults.map((item: { link: string }) =>
-                item.link
+    const structmodel = baseModel.withStructuredOutput(
+        z.object({
+            steps: z.array(
+                z.object({
+                    id: z.string(),
+                    goal: z.string()
+                })
             )
+        })
+    )
 
-            const searchResult = (`знайдено ${maxSites} сайтів для аналізу: ${filtered.join(' ; ')}`)
-            console.log(searchResult)
-
-            const toolMsg = new ToolMessage({
-                content: searchResult,
-                tool_call_id: toolCallId
-            })
-
-            const humanMsg = new HumanMessage(`
-                Позаходь у всі посилання, перевір чи вони відповідають меті. Якщо ні — познач що лінк не підходить. 
-                Якщо підходять або це сайт-ревюшник — витягни всю необхідну інформацію.
-                Якщо сайт-ревюшник без потрібної інформації, то позаходи на посилання сайтів які він надає та вже там отримай потрібну інформацію
-
-                якщо не достатньо сайтів, то подвой пошук
-            `)
-            return new Command({
-                update: {
-                    messages: [toolMsg, humanMsg]
-                }
-            })
-
-        } catch (error) {
-            console.log(error)
-            return ({ status: 'error', message: `[ERROR]: ${error}` })
-        }
+    const humanMsg = new HumanMessage(
+        `тобі дано певний список що потрібно найти, сформуй по тому списку план (накприклад:` +
+        `\n{
+      "id": "pricing",
+      "goal": "Find current pricing plans"
     },
     {
-        name: 'makeListOfLinks',
-        description: 'Створити запит в гугл для отримання посилань для подальшого парсингу інформації',
-        schema: z.object({
-            query: z.string().describe("напиши короткий та простий запит для пошуку в гугл (наприклад: шукаю рецепт для вишневого пирога)"),
-            maxSites: z.number().describe('кількість сайтів по яких будем робити дослідження (наприклад: 5)')
-        })
-    }
-)
+      "id": "features",
+      "goal": "Identify main product features"
+    },
+    {
+      "id": "audience",
+      "goal": "Identify target customer"
+    },....`+
+        `план мусить бути чіткий та покроковий. поки не роби кроку де пише про джерела`
+    )
+
+    const response = await structmodel.invoke([...state.messages, humanMsg])
+
+    console.log(response)
+
+    return {
+        steps: response.steps,
+        messages: [new AIMessage(JSON.stringify(response))]
+    };
+}

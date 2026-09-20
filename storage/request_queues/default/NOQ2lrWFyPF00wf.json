@@ -1,0 +1,9 @@
+{
+	"id": "NOQ2lrWFyPF00wf",
+	"json": "{\"id\":\"NOQ2lrWFyPF00wf\",\"url\":\"https://www.pipedrive.com/en/marketplace\",\"loadedUrl\":\"https://www.pipedrive.com/en/marketplace\",\"uniqueKey\":\"https://www.pipedrive.com/en/marketplace\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-20T17:05:41.139Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.pipedrive.com/en/marketplace",
+	"url": "https://www.pipedrive.com/en/marketplace"
+}
