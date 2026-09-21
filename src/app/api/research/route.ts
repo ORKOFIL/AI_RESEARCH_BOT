@@ -9,13 +9,12 @@ export async function POST(request: Request) {
 
         const taskId = await createResearch(user.id, title, goal, sources, outputFormat)
 
-        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, {taskId, title, goal, sources, outputFormat})
+        const jobb = await researchQueue.add(RESEARCH_QUEUE_NAME, {taskId, title, goal, sources, outputFormat}, {
+            attempts: 3,
+            backoff: { type: 'fixed', delay: 5000 }
+        })
 
         console.log(jobb.returnvalue)
-        // await researchQueue.add(RESEARCH_QUEUE_NAME, taskId, {
-        //     attempts: 3,
-        //     backoff: { type: 'fixed', delay: 1000 }
-        // })
 
         return NextResponse.json(
             { success: true, data: { title, goal, sources, outputFormat } },

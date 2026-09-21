@@ -10,8 +10,6 @@ const baseModel = new ChatOpenAI({
     temperature: 0
 });
 
-let synonimGoal = ""
-
 async function getSynonim(goal: string) {
     const result = await baseModel.withStructuredOutput(z.object({
         queries: z.array(z.string()).describe("Масив з 2-3 альтернативних пошукових фраз/синонімів")
@@ -20,16 +18,18 @@ async function getSynonim(goal: string) {
         new HumanMessage(`Початкова мета: "${goal}"`)
     ]);
 
-    synonimGoal = result.queries.toString();
+    return result.queries.toString();
 }
 
-let oldMarkdown = ""
 export async function stepsController(state: typeof AgentState.State) {
     console.log('[STEPS CONTROLLER] Started work')
     console.log(state.steps[state.currentStep])
     const { id, goal } = state.steps[state.currentStep]
     const currentLink = state.secondaryLink.secondUrl == null ? state.links[state.currentLink] : state.secondaryLink.secondUrl
     console.log(currentLink)
+
+    let synonimGoal = ''
+    let oldMarkdown = state.oldMarkdown ?? ''
 
     let parser = ""
     if (state.secondaryLink.secondUrl == null) {
@@ -57,12 +57,16 @@ export async function stepsController(state: typeof AgentState.State) {
         parser = cleanMarkdown
     }
 
+    if (state.secondaryLink.notfound != null) {
+        synonimGoal = await getSynonim(goal)
+    }
+
     const structmodel = baseModel.withStructuredOutput(
         z.object({
             reasoning: z
                 .string()
                 .describe(
-                    `Крок-за-кроком аналіз вмісту: чи є тут безпосередньо потрібна інформація відповідно до мети(${goal}), чи є лише посилання на неї, чи немає нічого з цього.`
+                    `Крок-за-кроком аналіз вмісту: чи є тут безпосередньо потрібна інформація відповідно до мети(${state.secondaryLink.notfound != null ? synonimGoal : goal}), чи є лише посилання на неї, чи немає нічого з цього.`
                 ),
             status: z
                 .enum(["content_found", "link_found", "not_found"])
@@ -80,10 +84,6 @@ export async function stepsController(state: typeof AgentState.State) {
         })
     )
 
-    if (state.secondaryLink.notfound != null) (
-        await getSynonim(goal)
-    )
-
     const humanMsg = new HumanMessage(
         `подивись чи нище є потрібна інформація відповідно до зарашньої мети:'${state.secondaryLink.notfound != null ? synonimGoal : goal}' або посилання де скоріш за все вона буде:` +
         `\n\n ${parser}`
@@ -92,23 +92,25 @@ export async function stepsController(state: typeof AgentState.State) {
     const response = await structmodel.invoke([humanMsg])
     console.log(response)
 
-    if (response.status == 'content_found') {
+    if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound != null)) {
         if (state.currentStep < state.steps.length - 1) {
             return new Command({
                 update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.extractedContent },
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
                     secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                    currentStep: state.currentStep + 1
+                    currentStep: state.currentStep + 1,
+                    oldMarkdown: oldMarkdown
                 },
                 goto: 'stepsController'
             })
         } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
             return new Command({
                 update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.extractedContent },
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
                     secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
                     currentLink: state.currentLink + 1,
-                    currentStep: 0
+                    currentStep: 0,
+                    oldMarkdown: oldMarkdown
                 },
                 goto: 'stepsController'
             })
@@ -118,10 +120,11 @@ export async function stepsController(state: typeof AgentState.State) {
             console.log('===================================================')
             return new Command({
                 update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.extractedContent },
+                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
                     secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
                     currentLink: 0,
-                    currentStep: 0
+                    currentStep: 0,
+                    oldMarkdown: oldMarkdown
                 },
                 goto: 'infoFinalizer'
             })
@@ -129,68 +132,18 @@ export async function stepsController(state: typeof AgentState.State) {
     } else if (response.status == 'link_found') {
         return new Command({
             update: {
-                secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl }
+                secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl },
+                oldMarkdown: oldMarkdown
             },
             goto: 'stepsController'
         })
-    } else if (response.status == 'not_found') {
-        if (state.secondaryLink.notfound == null) {
-            if (state.currentStep < state.steps.length - 1) {
-                return new Command({
-                    update: {
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 }
-                    },
-                    goto: 'stepsController'
-                })
-            } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
-                return new Command({
-                    update: {
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
-                    },
-                    goto: 'stepsController'
-                })
-            } else if (state.currentLink >= state.links.length - 1) {
-                return new Command({
-                    update: {
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 }
-                    },
-                    goto: 'stepsController'
-                })
-            }
-        } else if (state.secondaryLink.notfound != null) {
-            if (state.currentStep < state.steps.length - 1) {
-                return new Command({
-                    update: {
-                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.reasoning },
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                        currentStep: state.currentStep + 1
-                    },
-                    goto: 'stepsController'
-                })
-            } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
-                return new Command({
-                    update: {
-                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.reasoning },
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                        currentLink: state.currentLink + 1,
-                        currentStep: 0
-                    },
-                    goto: 'stepsController'
-                })
-            } else if (state.currentLink >= state.links.length - 1) {
-                console.log('==================== FINALISED ====================')
-                console.log(state.stepInfo)
-                console.log('===================================================')
-                return new Command({
-                    update: {
-                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.reasoning },
-                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                        currentLink: 0,
-                        currentStep: 0
-                    },
-                    goto: 'infoFinalizer'
-                })
-            }
-        }
+    } else if (response.status == 'not_found' && state.secondaryLink.notfound == null) {
+        return new Command({
+            update: {
+                secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
+                oldMarkdown: oldMarkdown
+            },
+            goto: 'stepsController'
+        })
     }
 }

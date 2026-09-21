@@ -29,4 +29,10 @@ export const AgentState = Annotation.Root({
         },
         default: () => [],
     }),
+
+    oldMarkdown: Annotation<string>({
+        reducer: (current, update) => (update !== undefined ? update : current),
+        default: () => '',
+    }),
+
 });
