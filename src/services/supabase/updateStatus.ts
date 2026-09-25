@@ -1,21 +1,20 @@
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
-export async function createResearch(userId: string, title: string, goal: string, sources: string) {
+export async function updateResearchStatus(status: string, jobId: string) {
     try {
         const { error, data } = await supabaseAdmin
             .from('research_tasks')
-            .insert([{ user_id: userId, title: title, goal: goal, sources: sources, status: 'pending' }])
+            .update({ status: status })
+            .eq('id', jobId)
             .select()
 
         if (error) throw error;
 
-        if (!data || data.length === 0) {
+        if (!data) {
             throw new Error('Failed to create research task: empty response');
         }
-
-        return data[0].id;
     } catch (error) {
-        console.error('Error creating research:', error);
+        console.error('Error updatinf research status:', error);
         throw error;
     }
 }

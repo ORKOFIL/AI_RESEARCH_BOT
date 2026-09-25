@@ -15,7 +15,7 @@ import { RestoreOriginalFunction } from 'next/dist/build/turborepo-access-trace/
 
 import { AgentState } from '@/lib/agentState';
 import { planner } from '@/services/ai/planner';
-import {stepsController} from '@/services/ai/mainLogic';
+import { stepsController } from '@/services/ai/mainLogic';
 import { infoFinalizer } from '@/services/ai/finalizer';
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env.local') });
@@ -28,6 +28,13 @@ const graph = new StateGraph(AgentState)
     .addNode('infoFinalizer', infoFinalizer)
     .addEdge(START, 'planner')
     .addEdge('planner', 'stepsController')
+    .addEdge('infoFinalizer', END)
+
+
+// const graph = new StateGraph(AgentState)
+//     .addNode('planner', planner)
+//     .addEdge(START, 'planner')
+//     .addEdge('planner', END)
 
 const checkpointer = new MemorySaver()
 const app = graph.compile({ checkpointer })
@@ -56,6 +63,7 @@ const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
         configurable: {
             thread_id: job.data.taskId
         },
+        recursionLimit: 50,
     };
 
     const urls = job.data.sources.split(/\s+/).filter(Boolean);
@@ -64,6 +72,8 @@ const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
     const currentState = await app.invoke({
         ...inputPayload,
 
+        jobId: job.data.taskId,
+        jobTitle: job.data.title,
         links: urls,
         goal: job.data.goal
 

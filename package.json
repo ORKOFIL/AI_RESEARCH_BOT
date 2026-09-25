@@ -15,6 +15,7 @@
     "@langchain/openai": "^1.5.12",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.116.0",
+    "@tanstack/react-query": "^5.103.2",
     "@tavily/core": "^0.7.10",
     "axios": "^1.20.0",
     "bullmq": "^6.3.4",
@@ -26,7 +27,8 @@
     "next": "16.3.4",
     "pg": "^8.23.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

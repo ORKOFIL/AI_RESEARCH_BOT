@@ -1,0 +1,9 @@
+{
+	"id": "F6IJG9NQfZy0cGs",
+	"json": "{\"id\":\"F6IJG9NQfZy0cGs\",\"url\":\"https://www.hubspot.com/pricing/suite?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing\",\"loadedUrl\":\"https://www.hubspot.com/pricing/suite?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing\",\"uniqueKey\":\"https://www.hubspot.com/pricing/suite?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T13:10:41.609Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.hubspot.com/pricing/suite?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing",
+	"url": "https://www.hubspot.com/pricing/suite?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing"
+}

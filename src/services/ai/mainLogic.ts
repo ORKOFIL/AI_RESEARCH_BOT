@@ -4,6 +4,7 @@ import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import { Command } from "@langchain/langgraph";
 import { scrapePage } from "@/services/browser/parser"
+import { updateResearchStatus } from "@/services/supabase/updateStatus"
 
 const baseModel = new ChatOpenAI({
     modelName: "gpt-4o-mini",
@@ -25,6 +26,7 @@ export async function stepsController(state: typeof AgentState.State) {
     console.log('[STEPS CONTROLLER] Started work')
     console.log(state.steps[state.currentStep])
     const { id, goal } = state.steps[state.currentStep]
+    if (state.currentStep == 0) updateResearchStatus(`getting info from ${state.links[state.currentLink]}`, state.jobId)
     const currentLink = state.secondaryLink.secondUrl == null ? state.links[state.currentLink] : state.secondaryLink.secondUrl
     console.log(currentLink)
 

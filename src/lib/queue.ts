@@ -9,4 +9,8 @@ export const RESEARCH_QUEUE_NAME = 'research-queue';
 
 export const researchQueue = new Queue(RESEARCH_QUEUE_NAME, {
   connection: redisConnection,
+  defaultJobOptions: {
+    removeOnComplete: true, // Автоматично видаляти успішні
+    removeOnFail: { age: 3600 }, // Видаляти провалені через 1 годину
+  },
 });

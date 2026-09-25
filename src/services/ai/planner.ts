@@ -2,6 +2,7 @@ import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import * as z from "zod";
+import { updateResearchStatus } from "@/services/supabase/updateStatus"
 
 const baseModel = new ChatOpenAI({
     modelName: "gpt-4o-mini",
@@ -9,6 +10,7 @@ const baseModel = new ChatOpenAI({
 });
 
 export async function planner(state: typeof AgentState.State) {
+    updateResearchStatus('planning', state.jobId)
 
     const structmodel = baseModel.withStructuredOutput(
         z.object({

@@ -3,6 +3,8 @@ import { Annotation, MessagesAnnotation } from "@langchain/langgraph";
 export const AgentState = Annotation.Root({
     ...MessagesAnnotation.spec,
 
+    jobId: Annotation<string>(),
+    jobTitle: Annotation<string>(),
     links: Annotation<string[]>(),
     steps: Annotation<Array<{ id: string; goal: string }>>(),
     goal: Annotation<string>(),
