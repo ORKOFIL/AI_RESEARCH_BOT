@@ -12,11 +12,12 @@ import { tvly } from '@/lib/tavilyClient';
 import * as z from "zod";
 import axios from 'axios';
 import { RestoreOriginalFunction } from 'next/dist/build/turborepo-access-trace/types';
-
+import { updateResearchStatus } from "@/services/supabase/updateStatus"
 import { AgentState } from '@/lib/agentState';
 import { planner } from '@/services/ai/planner';
 import { stepsController } from '@/services/ai/mainLogic';
 import { infoFinalizer } from '@/services/ai/finalizer';
+import {errorHandler} from '@/services/errors/errorHandler'
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env.local') });
 
@@ -26,6 +27,7 @@ const graph = new StateGraph(AgentState)
         ends: ['infoFinalizer']
     })
     .addNode('infoFinalizer', infoFinalizer)
+    .addNode('errorHandlingNode', errorHandler)
     .addEdge(START, 'planner')
     .addEdge('planner', 'stepsController')
     .addEdge('infoFinalizer', END)
@@ -63,7 +65,7 @@ const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
         configurable: {
             thread_id: job.data.taskId
         },
-        recursionLimit: 50,
+        recursionLimit: 500,
     };
 
     const urls = job.data.sources.split(/\s+/).filter(Boolean);
@@ -91,6 +93,20 @@ worker.on('completed', async (job) => {
     console.log(`WORKER COMPLETED: ${job.data.taskId}`)
 })
 
-worker.on('failed', async (job, error) => {
-    console.log(`[ERROR] ${job!.id}, ${error}`)
+worker.on('failed', async (job, err) => {
+    console.error(`Job ${job?.id} failed with error:`, err.message);
+
+    if (job?.data?.taskId) {
+        updateResearchStatus('ERROR', job.data.taskId)
+        const { error: dbError } = await supabaseAdmin
+            .from('research_results')
+            .update({
+                status: 'ERROR',
+                output: `Критична помилка виконання: ${err.message}`
+            })
+            .eq('research_task_id', job.data.taskId);
+        if (dbError) {
+            console.error("Не вдалося записати статус ERROR в Supabase:", dbError.message);
+        }
+    }
 })

@@ -14,7 +14,7 @@ export async function updateResearchStatus(status: string, jobId: string) {
             throw new Error('Failed to create research task: empty response');
         }
     } catch (error) {
-        console.error('Error updatinf research status:', error);
+        console.error('Error updating research status:', error);
         throw error;
     }
 }

@@ -9,9 +9,18 @@ export const AgentState = Annotation.Root({
     steps: Annotation<Array<{ id: string; goal: string }>>(),
     goal: Annotation<string>(),
 
-    secondaryLink: Annotation<{ url: number | null, step: number | null, secondUrl: string | null, notfound: number | null }>({
-        default: () => ({ url: null, step: null, secondUrl: null, notfound: null }),
+    errorRetries: Annotation<number>({
+        reducer: (current, update) => (update !== undefined ? update : current),
+        default: () => 0,
+    }),
+
+    secondaryLink: Annotation<{ url: number | null, step: number | null, secondUrl: string | null, notfound: number}>({
+        default: () => ({ url: null, step: null, secondUrl: null, notfound: 0 }),
         reducer: (prev, next) => next ?? prev,
+    }),
+    loop: Annotation<number>({
+        reducer: (current, update) => (update !== undefined ? update : current),
+        default: () => 0,
     }),
 
     currentLink: Annotation<number>({
@@ -36,5 +45,9 @@ export const AgentState = Annotation.Root({
         reducer: (current, update) => (update !== undefined ? update : current),
         default: () => '',
     }),
+
+
+
+    error_message: Annotation<string>(),
 
 });

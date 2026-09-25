@@ -34,6 +34,8 @@ export async function stepsController(state: typeof AgentState.State) {
     let oldMarkdown = state.oldMarkdown ?? ''
 
     let parser = ""
+    let currentLoop = state.loop
+
     if (state.secondaryLink.secondUrl == null) {
         if (state.currentStep == 0) {
             const { cleanMarkdown, resp } = await scrapePage(currentLink)
@@ -57,9 +59,10 @@ export async function stepsController(state: typeof AgentState.State) {
     } else {
         const { cleanMarkdown } = await scrapePage(currentLink)
         parser = cleanMarkdown
+        currentLoop += 1
     }
 
-    if (state.secondaryLink.notfound != null) {
+    if (state.secondaryLink.notfound > 0) {
         synonimGoal = await getSynonim(goal)
     }
 
@@ -68,7 +71,7 @@ export async function stepsController(state: typeof AgentState.State) {
             reasoning: z
                 .string()
                 .describe(
-                    `Крок-за-кроком аналіз вмісту: чи є тут безпосередньо потрібна інформація відповідно до мети(${state.secondaryLink.notfound != null ? synonimGoal : goal}), чи є лише посилання на неї, чи немає нічого з цього.`
+                    `Крок-за-кроком аналіз вмісту: чи є тут безпосередньо потрібна інформація відповідно до мети(${state.secondaryLink.notfound > 0 ? synonimGoal : goal}), чи є лише посилання на неї, чи немає нічого з цього.`
                 ),
             status: z
                 .enum(["content_found", "link_found", "not_found"])
@@ -87,65 +90,84 @@ export async function stepsController(state: typeof AgentState.State) {
     )
 
     const humanMsg = new HumanMessage(
-        `подивись чи нище є потрібна інформація відповідно до зарашньої мети:'${state.secondaryLink.notfound != null ? synonimGoal : goal}' або посилання де скоріш за все вона буде:` +
+        `подивись чи нище є потрібна інформація відповідно до зарашньої мети:'${state.secondaryLink.notfound > 0 ? synonimGoal : goal}' або посилання де скоріш за все вона буде:` +
         `\n\n ${parser}`
     )
+    try {
+        const response = await structmodel.invoke([humanMsg])
+        console.log(response)
 
-    const response = await structmodel.invoke([humanMsg])
-    console.log(response)
-
-    if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound != null)) {
-        if (state.currentStep < state.steps.length - 1) {
+        if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound >= 2) || currentLoop >= 3) {
+            if (state.currentStep < state.steps.length - 1) {
+                return new Command({
+                    update: {
+                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
+                        currentStep: state.currentStep + 1,
+                        oldMarkdown: oldMarkdown
+                    },
+                    goto: 'stepsController'
+                })
+            } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
+                return new Command({
+                    update: {
+                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
+                        currentLink: state.currentLink + 1,
+                        currentStep: 0,
+                        oldMarkdown: oldMarkdown
+                    },
+                    goto: 'stepsController'
+                })
+            } else if (state.currentLink >= state.links.length - 1) {
+                console.log('==================== FINALISED ====================')
+                console.log(state.stepInfo)
+                console.log('===================================================')
+                return new Command({
+                    update: {
+                        stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
+                        secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
+                        currentLink: 0,
+                        currentStep: 0,
+                        oldMarkdown: oldMarkdown
+                    },
+                    goto: 'infoFinalizer'
+                })
+            }
+        } else if (response.status == 'link_found') {
             return new Command({
                 update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
-                    secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                    currentStep: state.currentStep + 1,
-                    oldMarkdown: oldMarkdown
+                    secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl },
+                    oldMarkdown: oldMarkdown,
+                    loop: currentLoop
                 },
                 goto: 'stepsController'
             })
-        } else if (state.currentStep >= state.steps.length - 1 && state.currentLink < state.links.length - 1) {
+        } else if (response.status == 'not_found' && state.secondaryLink.notfound < 2) {
             return new Command({
                 update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
-                    secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                    currentLink: state.currentLink + 1,
-                    currentStep: 0,
+                    secondaryLink: { url: null, step: null, secondUrl: null, notfound: state.secondaryLink.notfound + 1 },
                     oldMarkdown: oldMarkdown
                 },
                 goto: 'stepsController'
-            })
-        } else if (state.currentLink >= state.links.length - 1) {
-            console.log('==================== FINALISED ====================')
-            console.log(state.stepInfo)
-            console.log('===================================================')
-            return new Command({
-                update: {
-                    stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
-                    secondaryLink: { url: null, step: null, secondUrl: null, notfound: null },
-                    currentLink: 0,
-                    currentStep: 0,
-                    oldMarkdown: oldMarkdown
-                },
-                goto: 'infoFinalizer'
             })
         }
-    } else if (response.status == 'link_found') {
-        return new Command({
-            update: {
-                secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl },
-                oldMarkdown: oldMarkdown
-            },
-            goto: 'stepsController'
-        })
-    } else if (response.status == 'not_found' && state.secondaryLink.notfound == null) {
-        return new Command({
-            update: {
-                secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
-                oldMarkdown: oldMarkdown
-            },
-            goto: 'stepsController'
-        })
+    } catch (error) {
+        console.error("OpenAI API Error:", error)
+        if (state.errorRetries < 3) {
+            console.log(`Повторна спроба... (${state.errorRetries + 1}/3)`);
+            return new Command({
+                update: { errorRetries: state.errorRetries + 1 },
+                goto: "stepsController"
+            });
+        } else {
+            return new Command({
+                update: {
+                    errorRetries: 0,
+                    error_message: "LLM failed after 3 retries"
+                },
+                goto: "errorHandlingNode"
+            });
+        }
     }
 }

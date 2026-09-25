@@ -42,8 +42,7 @@ export default function Page() {
           setStatus(data.status)
         }
 
-
-        if (data.status == 'finished') {
+        if (data.status == 'finished' || data.status == 'ERROR') {
           const response = await fetch(`api/output/${taskId}`);
           const data = await response.json();
           console.log('Отримані дані:', data.output);

@@ -11,14 +11,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             .select('content')
             .eq('research_task_id', taskId)
             .select()
-        
+
         if (error || !data) {
             return NextResponse.json(
                 { error: `Failed to process request: ${error}` },
                 { status: 500 }
             )
         }
-
+        
         return NextResponse.json({ output: data![0].content })
     } catch (error) {
         return NextResponse.json(

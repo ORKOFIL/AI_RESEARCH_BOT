@@ -3,6 +3,7 @@ import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import * as z from "zod";
 import { updateResearchStatus } from "@/services/supabase/updateStatus"
+import { Command } from "@langchain/langgraph";
 
 const baseModel = new ChatOpenAI({
     modelName: "gpt-4o-mini",
@@ -39,13 +40,31 @@ export async function planner(state: typeof AgentState.State) {
     },....`+
         `план мусить бути чіткий та покроковий. поки не роби кроку де пише про джерела`
     )
+    try {
+        const response = await structmodel.invoke([...state.messages, humanMsg])
 
-    const response = await structmodel.invoke([...state.messages, humanMsg])
+        console.log(response)
 
-    console.log(response)
-
-    return {
-        steps: response.steps,
-        messages: [new AIMessage(JSON.stringify(response))]
-    };
+        return {
+            steps: response.steps,
+            messages: [new AIMessage(JSON.stringify(response))]
+        };
+    } catch (error) {
+        console.error("OpenAI API Error:", error)
+        if (state.errorRetries < 3) {
+            console.log(`Повторна спроба... (${state.errorRetries + 1}/3)`);
+            return new Command({
+                update: { errorRetries: state.errorRetries + 1 },
+                goto: "planner"
+            });
+        } else {
+            return new Command({
+                update: { 
+                    errorRetries: 0,
+                    error_message: "LLM failed after 3 retries" 
+                },
+                goto: "errorHandlingNode"
+            });
+        }
+    }
 }
