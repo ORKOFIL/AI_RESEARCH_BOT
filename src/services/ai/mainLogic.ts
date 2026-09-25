@@ -26,7 +26,7 @@ export async function stepsController(state: typeof AgentState.State) {
     console.log('[STEPS CONTROLLER] Started work')
     console.log(state.steps[state.currentStep])
     const { id, goal } = state.steps[state.currentStep]
-    if (state.currentStep == 0) updateResearchStatus(`getting info from ${state.links[state.currentLink]}`, state.jobId)
+    if (state.currentStep == 0) await updateResearchStatus(`getting info from ${state.links[state.currentLink]}`, state.jobId)
     const currentLink = state.secondaryLink.secondUrl == null ? state.links[state.currentLink] : state.secondaryLink.secondUrl
     console.log(currentLink)
 
@@ -34,7 +34,6 @@ export async function stepsController(state: typeof AgentState.State) {
     let oldMarkdown = state.oldMarkdown ?? ''
 
     let parser = ""
-    let currentLoop = state.loop
 
     if (state.secondaryLink.secondUrl == null) {
         if (state.currentStep == 0) {
@@ -59,7 +58,6 @@ export async function stepsController(state: typeof AgentState.State) {
     } else {
         const { cleanMarkdown } = await scrapePage(currentLink)
         parser = cleanMarkdown
-        currentLoop += 1
     }
 
     if (state.secondaryLink.notfound > 0) {
@@ -97,14 +95,15 @@ export async function stepsController(state: typeof AgentState.State) {
         const response = await structmodel.invoke([humanMsg])
         console.log(response)
 
-        if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound >= 2) || currentLoop >= 3) {
+        if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound >= 2) || state.loop >= 2) {
             if (state.currentStep < state.steps.length - 1) {
                 return new Command({
                     update: {
                         stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
                         secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
                         currentStep: state.currentStep + 1,
-                        oldMarkdown: oldMarkdown
+                        oldMarkdown: oldMarkdown,
+                        loop: 0
                     },
                     goto: 'stepsController'
                 })
@@ -115,7 +114,8 @@ export async function stepsController(state: typeof AgentState.State) {
                         secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
                         currentLink: state.currentLink + 1,
                         currentStep: 0,
-                        oldMarkdown: oldMarkdown
+                        oldMarkdown: oldMarkdown,
+                        loop: 0
                     },
                     goto: 'stepsController'
                 })
@@ -129,7 +129,8 @@ export async function stepsController(state: typeof AgentState.State) {
                         secondaryLink: { url: null, step: null, secondUrl: null, notfound: 0 },
                         currentLink: 0,
                         currentStep: 0,
-                        oldMarkdown: oldMarkdown
+                        oldMarkdown: oldMarkdown,
+                        loop: 0
                     },
                     goto: 'infoFinalizer'
                 })
@@ -139,7 +140,7 @@ export async function stepsController(state: typeof AgentState.State) {
                 update: {
                     secondaryLink: { url: state.currentLink, step: state.currentStep, secondUrl: response.relevantUrl },
                     oldMarkdown: oldMarkdown,
-                    loop: currentLoop
+                    loop: state.loop + 1
                 },
                 goto: 'stepsController'
             })
@@ -147,7 +148,8 @@ export async function stepsController(state: typeof AgentState.State) {
             return new Command({
                 update: {
                     secondaryLink: { url: null, step: null, secondUrl: null, notfound: state.secondaryLink.notfound + 1 },
-                    oldMarkdown: oldMarkdown
+                    oldMarkdown: oldMarkdown,
+                    loop: 0
                 },
                 goto: 'stepsController'
             })

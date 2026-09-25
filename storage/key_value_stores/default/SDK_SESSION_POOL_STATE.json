@@ -1,9 +1,9 @@
 {
-  "usableSessionsCount": 10,
+  "usableSessionsCount": 16,
   "retiredSessionsCount": 0,
   "sessions": [
     {
-      "id": "session_6oUhk9Eyr4",
+      "id": "session_3L3ZBoFlcX",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -16,14 +16,14 @@
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:06.795Z",
-      "createdAt": "2026-09-25T13:10:06.795Z",
+      "expiresAt": "2026-09-25T18:28:06.130Z",
+      "createdAt": "2026-09-25T17:38:06.130Z",
       "usageCount": 0,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_4yv6KbZdSq",
+      "id": "session_QWk8mFDaOZ",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -34,75 +34,75 @@
         "cookies": [
           {
             "key": "__cf_bm",
-            "value": "KJpaVIXtgnFojwdoSylqWnrB5rIojl56ayRFLJ6Hn5o-1790341810.8029175-1.0.1.1-BrZNJ9EzsPaeGFmcWu0L1Tu_gdBd_9w82rHbU13hVvxmPNSTLfdtHlpprGAGKqZtq32E_nEIfPgmqkmgQ9StuLC1Q_8EbPGBkpj_HagvTKGq.lU5qAmPgDkHWeb20Jem",
-            "expires": "2026-09-25T13:40:09.054Z",
+            "value": "tiGjA0Zev9g68BpJ2wuCcnMjMHBD6EXQ3wAPTAX6rK4-1790357892.1446226-1.0.1.1-1U0ZjBU5ciPYf5U1onQsdjwJzM3Jre.r3ROqsqO0cxD8IdNsQiL_L0kHgBouezFATj5uHusOLjVbA45jcF3gpDqYag9j7E8TQZdXWz1boRN70umIW.5G9lQfcDZZstLp",
+            "expires": "2026-09-25T18:08:10.558Z",
             "domain": "hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:11.939Z",
-            "lastAccessed": "2026-09-25T13:10:11.939Z"
+            "creation": "2026-09-25T17:38:24.458Z",
+            "lastAccessed": "2026-09-25T17:38:24.458Z"
           },
           {
             "key": "_cfuvid",
-            "value": "IktROEgg5X78ifiNSh6jZkCX0tU6hcQ0LEvIeJodIOk-1790341812.265887-1.0.1.1-0WXPg3ouaGJEotmZmkfSh8p4jEqMH._JisIXlwYgnCs",
-            "expires": "2026-09-25T14:00:11.938Z",
+            "value": "zVg4IoWDxWc.mlmVnghFnQR2MvFwrVebf5Be8In1N8g-1790357903.752356-1.0.1.1-2WvcvBYpSfCkECvq2HpejLQ640rosF8MAnQmYsyAtcM",
+            "expires": "2026-09-25T18:28:24.457Z",
             "domain": "www.hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:11.942Z",
-            "lastAccessed": "2026-09-25T13:10:11.942Z"
+            "creation": "2026-09-25T17:38:24.462Z",
+            "lastAccessed": "2026-09-25T17:38:24.462Z"
           },
           {
             "key": "laboratory-anonymous-id",
-            "value": "anone6bb1c5a7dba33048d22d2f1efbe",
-            "expires": "2026-09-25T14:00:11.938Z",
+            "value": "anonef7592bd850de1dddaf9b6c48a64",
+            "expires": "2026-09-25T18:28:24.457Z",
             "domain": "hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:11.943Z",
-            "lastAccessed": "2026-09-25T13:10:11.943Z"
+            "creation": "2026-09-25T17:38:24.462Z",
+            "lastAccessed": "2026-09-25T17:38:24.462Z"
           },
           {
             "key": "__cf_bm",
-            "value": "g3oCBnowDiefSvKofhtTw4ztYAZRnnHyomiBqxUomnI-1790341813.5236332-1.0.1.1-sUtpCMcs217aFmogrmgoY2PaT7b.RH0YMlP8xMFbQbY34tqtrhKN.4I0qvBQANEXs_IgIxEZsZ9nGx6I4S0h_4B9l2v.cMTw8.CSkNDkz8NsXvlasE7jQdOR.5oa8_mQ",
-            "expires": "2026-09-25T13:40:11.791Z",
+            "value": "a4DaLqlgATj0BrQoT3UXY13uIqsC5aHiwRPuSF4gzt4-1790357905.9667506-1.0.1.1-540ppaS4Cxy8fFVRhI2yx.38fq8g0hpwXGW2Qi36DVpuXlR6uzjwGUzLLAaEcBI.81T.EhNQLmgAsY25JEF.2Xdm1sQmKUU6qsUxCXS70_e_iqIOp5ATvGPQDmtFXnNp",
+            "expires": "2026-09-25T18:08:24.164Z",
             "domain": "www.hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:11.944Z",
-            "lastAccessed": "2026-09-25T13:10:11.944Z"
+            "creation": "2026-09-25T17:38:24.463Z",
+            "lastAccessed": "2026-09-25T17:38:24.463Z"
           },
           {
             "key": "_gcl_au",
-            "value": "1.1.1477192392.1790341812",
-            "expires": "2026-12-24T13:10:11.000Z",
+            "value": "1.1.522524807.1790357904",
+            "expires": "2026-12-24T17:38:24.000Z",
             "domain": "hubspot.com",
             "path": "/",
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:11.944Z",
-            "lastAccessed": "2026-09-25T13:10:11.944Z"
+            "creation": "2026-09-25T17:38:24.463Z",
+            "lastAccessed": "2026-09-25T17:38:24.463Z"
           }
         ]
       },
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:06.797Z",
-      "createdAt": "2026-09-25T13:10:06.797Z",
+      "expiresAt": "2026-09-25T18:28:06.134Z",
+      "createdAt": "2026-09-25T17:38:06.134Z",
       "usageCount": 1,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_QIeqGmc9Jg",
+      "id": "session_JFhawTCYDa",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -115,91 +115,14 @@
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:17.970Z",
-      "createdAt": "2026-09-25T13:10:17.970Z",
+      "expiresAt": "2026-09-25T18:28:30.305Z",
+      "createdAt": "2026-09-25T17:38:30.305Z",
       "usageCount": 0,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_0vnyJQakuS",
-      "cookieJar": {
-        "version": "tough-cookie@6.0.2",
-        "storeType": "MemoryCookieStore",
-        "rejectPublicSuffixes": true,
-        "enableLooseMode": false,
-        "allowSpecialUseDomain": true,
-        "prefixSecurity": "silent",
-        "cookies": [
-          {
-            "key": "__cf_bm",
-            "value": "kFEJ45bpeOdOgAwU._j7R9sdFvaCwMlnoByAelPKTlQ-1790341821.2440474-1.0.1.1-VpN1rzKi53wGEL7piR6zF_9zDjdx4jv36_vdzGjBtKg000twUYxr_8IOTavb5Z3Ins8gDF0qUjcS_TW4YrDRBuIXOAAr5UHq8vBY0mqHNnsa1uqYNo5WeVaG7O2QkDp2",
-            "expires": "2026-09-25T13:40:19.592Z",
-            "domain": "hubspot.com",
-            "path": "/",
-            "secure": true,
-            "httpOnly": true,
-            "hostOnly": false,
-            "creation": "2026-09-25T13:10:20.373Z",
-            "lastAccessed": "2026-09-25T13:10:20.373Z"
-          },
-          {
-            "key": "_cfuvid",
-            "value": "OEJqx6c7sKzCCOW8VNd3L6wEZZL1.fqHVjvnB5xqnXI-1790341821.2440474-1.0.1.1-IN_6YxbkIp2qvSPBx4erGF0r9WGA04B2olheB82Mq0A",
-            "expires": "2026-09-25T14:00:20.373Z",
-            "domain": "hubspot.com",
-            "path": "/",
-            "secure": true,
-            "httpOnly": true,
-            "hostOnly": false,
-            "creation": "2026-09-25T13:10:20.373Z",
-            "lastAccessed": "2026-09-25T13:10:20.373Z"
-          },
-          {
-            "key": "__cf_bm",
-            "value": "kJ6rmrUVIKzYMAX0WrZAlZYgGu_V0EBfcNSDj0wnwfc-1790341821.9758265-1.0.1.1-tqu.V3br5mlY1Urdm8Fx6vGDraD4iF8emBl1ZmAs3JGKOYu6FvbJyvOc4G4SehV0O0nnbBgImOcjkZpIqOdt3PG5MDFXkXA1kwCXJEy1PbBAzQPRVHDbAodIMa58Fy1S",
-            "expires": "2026-09-25T13:40:20.305Z",
-            "domain": "www.hubspot.com",
-            "path": "/",
-            "secure": true,
-            "httpOnly": true,
-            "hostOnly": false,
-            "creation": "2026-09-25T13:10:20.373Z",
-            "lastAccessed": "2026-09-25T13:10:20.373Z"
-          }
-        ]
-      },
-      "userData": {},
-      "maxErrorScore": 3,
-      "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:17.971Z",
-      "createdAt": "2026-09-25T13:10:17.971Z",
-      "usageCount": 1,
-      "maxUsageCount": 50,
-      "errorScore": 0
-    },
-    {
-      "id": "session_F9zyilis95",
-      "cookieJar": {
-        "version": "tough-cookie@6.0.2",
-        "storeType": "MemoryCookieStore",
-        "rejectPublicSuffixes": true,
-        "enableLooseMode": false,
-        "allowSpecialUseDomain": true,
-        "prefixSecurity": "silent",
-        "cookies": []
-      },
-      "userData": {},
-      "maxErrorScore": 3,
-      "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:23.224Z",
-      "createdAt": "2026-09-25T13:10:23.224Z",
-      "usageCount": 0,
-      "maxUsageCount": 50,
-      "errorScore": 0
-    },
-    {
-      "id": "session_5wr4aennUB",
+      "id": "session_XdIDvsMdhA",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -210,63 +133,63 @@
         "cookies": [
           {
             "key": "_cfuvid",
-            "value": "1ejM.wBPP6WpUmNurVi3xfNeRvUyyI3vxSDqGfjqZr8-1790341825.9900825-1.0.1.1-30hvSlRENx1gLxbgxTvSPVojiPIsddQFjHksOcvPDk8",
-            "expires": "2026-09-25T14:00:41.255Z",
+            "value": "IT.Wx1rHgDWqWbmaF1n3tVuq9YGyJhxEqmjc0Z7jGUU-1790357914.0735407-1.0.1.1-Bbdow9hPMVc5k1T..accBXyqG4_UA41QIXJ5QLoKfFA",
+            "expires": "2026-09-25T18:28:43.295Z",
             "domain": "hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:41.255Z",
-            "lastAccessed": "2026-09-25T13:10:41.255Z"
+            "creation": "2026-09-25T17:38:43.295Z",
+            "lastAccessed": "2026-09-25T17:38:43.295Z"
           },
           {
             "key": "__cf_bm",
-            "value": "lTMekRmBiaEoeH98qBIZrLVT2Dywnh_NLZmfkLIpykM-1790341829.9253101-1.0.1.1-QpE0LY_HN.s_DZnoCbWAahLmWDEBHt.s03E9ECg.FoDtEQUh_zE_YqwzuLg44FZT5KooDkjGtpoUpbDmuGjQdOcXrrX1BwQMb3apg0jLUgyDP6BuVAtp8VuSF5ixTiz4",
-            "expires": "2026-09-25T13:40:28.417Z",
+            "value": "ewCpawf5FLSiosCiE9ZYHeRrBT7DEKe8ZcTuZOoS3fM-1790357914.9390237-1.0.1.1-BEVTK_j9Tpo8rYG8o0_muS62kNRjO5wdS.FidtMmWxeyACHfnVdzHf.o9uMjMkeQI7HqKogj4vBsI8pEj1pANtSJxxSK2PuCc0O_DdzuIurCendyaOw2gKbfkbguqCb6",
+            "expires": "2026-09-25T18:08:33.373Z",
             "domain": "hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:41.255Z",
-            "lastAccessed": "2026-09-25T13:10:41.255Z"
+            "creation": "2026-09-25T17:38:43.295Z",
+            "lastAccessed": "2026-09-25T17:38:43.295Z"
           },
           {
             "key": "__cf_bm",
-            "value": "qODCvJZxb99at7I1cl3uf1cvP9aUw3z_WIQVML9kIxg-1790341842.8164763-1.0.1.1-jWBBKR5Bh8SOiNajLvQGeo17WREM8c1bREjrMhsoHfJqEOgszX07NzrjVYnQKv2Gs.6hWuWWPg0Zb0Rg1l63YEfQoRbOO789lbL0Bko_CacVfiw4UOvAhAoQbF4jzyuc",
-            "expires": "2026-09-25T13:40:41.159Z",
+            "value": "5soxkid5VowNyqQ.w6xWJKLVbyRsb8cw5RQ4TqTFETM-1790357924.6568-1.0.1.1-houMiY1NWlnv_XOz30aPZo55IyWnLrVXCGUOGIjwiNYKCVBmcOS1QQ6fSZ_1kdQjzysgICFdEMZ5XM_HQJ.N0PxH3ReibZyTTiGq6aoL4GWm5XFTgeE9D2DPJZMgIkhN",
+            "expires": "2026-09-25T18:08:42.753Z",
             "domain": "www.hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:41.255Z",
-            "lastAccessed": "2026-09-25T13:10:41.255Z"
+            "creation": "2026-09-25T17:38:43.296Z",
+            "lastAccessed": "2026-09-25T17:38:43.296Z"
           },
           {
             "key": "_gcl_au",
-            "value": "1.1.1528238584.1790341841",
-            "expires": "2026-12-24T13:10:41.000Z",
+            "value": "1.1.817529297.1790357923",
+            "expires": "2026-12-24T17:38:43.000Z",
             "domain": "hubspot.com",
             "path": "/",
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:41.255Z",
-            "lastAccessed": "2026-09-25T13:10:41.255Z"
+            "creation": "2026-09-25T17:38:43.296Z",
+            "lastAccessed": "2026-09-25T17:38:43.296Z"
           }
         ]
       },
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:23.225Z",
-      "createdAt": "2026-09-25T13:10:23.225Z",
+      "expiresAt": "2026-09-25T18:28:30.306Z",
+      "createdAt": "2026-09-25T17:38:30.306Z",
       "usageCount": 1,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_sVdsnaigTb",
+      "id": "session_E4FOlhVJIm",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -279,14 +202,14 @@
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:47.795Z",
-      "createdAt": "2026-09-25T13:10:47.795Z",
+      "expiresAt": "2026-09-25T18:28:53.350Z",
+      "createdAt": "2026-09-25T17:38:53.350Z",
       "usageCount": 0,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_uLxQ1mh0Hc",
+      "id": "session_Yn5uH6tfZe",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -296,96 +219,321 @@
         "prefixSecurity": "silent",
         "cookies": [
           {
-            "key": "hs_ab_test",
-            "value": "201114305969:191021293659",
-            "expires": "2026-09-25T14:00:53.172Z",
-            "domain": "www.hubspot.com",
-            "path": "/products",
-            "hostOnly": true,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
-          },
-          {
-            "key": "_cfuvid",
-            "value": "CXhivlZV_DJ4N1sv9HTS6_YUnUUMcAFF9zM62xXidI8-1790341851.6498804-1.0.1.1-bAWtAdPmV9CYK52O35uqHkv2L8EHVLCra_.SZuGNtsY",
-            "expires": "2026-09-25T14:00:53.172Z",
-            "domain": "www.hubspot.com",
-            "path": "/",
-            "secure": true,
-            "httpOnly": true,
-            "hostOnly": false,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
-          },
-          {
-            "key": "laboratory-anonymous-id",
-            "value": "anon7d5c23b5b81a905bea0d0cb0560b",
-            "expires": "2026-09-25T14:00:53.172Z",
+            "key": "__cf_bm",
+            "value": "aLMyYlwTkX42MEgfgI_xgDH6dkGw_lWTdA2y3IvE3XE-1790357935.7806582-1.0.1.1-4Glt6TVIGtFiCN9c96SIyzpBQj_nnUA1nSoLj3j5gK5fl8APLd4Q33vmdpJTuBj4daJiFoof9hMrqF0Hua95STdmLck3eiTqfLaofbHiF3qN7Tw8xA7oIQuWrML8yH3A",
+            "expires": "2026-09-25T18:08:54.088Z",
             "domain": "hubspot.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
-          },
+            "creation": "2026-09-25T17:39:09.915Z",
+            "lastAccessed": "2026-09-25T17:39:09.915Z"
+          }
+        ]
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:28:53.350Z",
+      "createdAt": "2026-09-25T17:38:53.350Z",
+      "usageCount": 1,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_VgAAqczvJo",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:29:17.378Z",
+      "createdAt": "2026-09-25T17:39:17.378Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_hmOeIVGaN0",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": [
           {
             "key": "__cf_bm",
-            "value": "THN9ubehkXB2p1JIaICrQTJPlziHaG6GRQbNFZx6SUY-1790341852.529565-1.0.1.1-wqBnDOFPr6J1CneBFGV9dDafJuZRyjqhAyR.X_hCMggiZt_WQXwsNFlk_18qeHXiQe5Mjj6D7P_1xVnJHMO27VFUTLj45mde3DfYn5fYF6sb6yiO7aVA7UAHpFx4b7Ey",
-            "expires": "2026-09-25T13:40:50.774Z",
-            "domain": "hubspot.com",
+            "value": "sZso9uLg38.wd1Vo5mBoNYxMrP8SLrdS7e_JwcBcaAw-1790357960.3801427-1.0.1.1-xSWhzGjk4JnVYbHAm9rIFg0Ny9FRSB.11NMgGE2dc0NzGxCFh9YBp.ZqESGcWBaaKXukxBzOsYperuQl7pwOIz5oB1uGbZQlU15.r61RZo9TADrWbV1ztzwatzFeew58",
+            "expires": "2026-09-25T18:09:18.453Z",
+            "domain": "pipedrive.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
-          },
-          {
-            "key": "g_state",
-            "value": "{\"i_l\":0,\"i_ll\":1790341851376,\"i_b\":\"gvYkHzK+SUcAyPv3AV5ItOkBaT7I2r7nGCp4iJdmIKA\",\"i_e\":{\"enable_itp_optimization\":24},\"i_et\":1790341851376}",
-            "expires": "2027-03-24T13:10:51.000Z",
-            "domain": "www.hubspot.com",
-            "path": "/",
-            "hostOnly": true,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
-          },
+            "creation": "2026-09-25T17:39:21.621Z",
+            "lastAccessed": "2026-09-25T17:39:21.621Z"
+          }
+        ]
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:29:17.379Z",
+      "createdAt": "2026-09-25T17:39:17.379Z",
+      "usageCount": 1,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_itBheytDja",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:29:27.493Z",
+      "createdAt": "2026-09-25T17:39:27.493Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_i2Xr6cdaiw",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": [
           {
             "key": "__cf_bm",
-            "value": "rf1Yenq8d5rtIW5tQhZl59j82QFm7Jx89sm2VxhzZJY-1790341854.7317789-1.0.1.1-MO8H4b3AgOE38q3xkDUjUYu7t4ZhRdFm4QZv.xSdb.ROavUk_I2iDF0xm_dYE2oQQJvZZHRb8VzCylMzy5QjUJ6_iOkF7GmGvu.0Hg.AjkggKdFHa1v9wfRdEJWZ9CNe",
-            "expires": "2026-09-25T13:40:53.019Z",
-            "domain": "www.hubspot.com",
+            "value": "IEFh394ALLQMj6YC7jzam_QYHyT2_1cCVfYqGcpNEwI-1790357970.9102468-1.0.1.1-E6yp9OW5NkCYa85ZWwxp1WgfLe4F2N.D7diPk9JxISIUFuosmuzM.gu3DIWVxs7VfSbb__ixaon8UEWsk_AstPPcyrV6hfH1yRs49NwhysYnYQNcvzT9MTtJtmGKC8G8",
+            "expires": "2026-09-25T18:09:29.221Z",
+            "domain": "pipedrive.com",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
+            "creation": "2026-09-25T17:39:32.205Z",
+            "lastAccessed": "2026-09-25T17:39:32.205Z"
+          }
+        ]
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:29:27.494Z",
+      "createdAt": "2026-09-25T17:39:27.494Z",
+      "usageCount": 1,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_vZvE6NiTB6",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:29:48.213Z",
+      "createdAt": "2026-09-25T17:39:48.213Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_pNm1XsaQUm",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": [
+          {
+            "key": "EXP_7799281eee_identity",
+            "value": "JTIyJTdCJTVDJTIyd2ViX2V4cF9pZF92MiU1QyUyMiUzQSU1QyUyMjQ0YWEzYWIyLTZjMzktNDY4My05MTliLWZkZmVjN2UzMGVkZCU1QyUyMiUyQyU1QyUyMmZpcnN0X3NlZW4lNUMlMjIlM0ElNUMlMjIxNzkwMzU3OTk3LjYwMSU1QyUyMiU3RCUyMg==",
+            "expires": "2027-09-25T17:39:57.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "__obref",
+            "value": "16348c1d-e902-42fc-b9cd-fcbd923c97aa",
+            "expires": "2027-09-25T17:39:57.991Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_uetsid",
+            "value": "2102a470b90811f1b1cdfb77770d7dcf",
+            "expires": "2026-09-26T17:39:58.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_uetvid",
+            "value": "2102c7a0b90811f1854275c4a5bc87cc",
+            "expires": "2027-10-20T17:39:58.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_clck",
+            "value": "1ifq544%5E2%5Eg9r%5E0%5E2459",
+            "expires": "2027-09-25T17:40:34.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_clsk",
+            "value": "15zobvj%5E1790358035578%5E1%5E1%5Eu.clarity.ms%2Fcollect",
+            "expires": "2026-09-26T17:40:35.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "ajs_anonymous_id",
+            "value": "07b0cb7c-76f2-4fe7-871a-585b92a5a421",
+            "expires": "2027-09-25T17:40:37.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_twpid",
+            "value": "tw.1790358035940.302094289397230985",
+            "expires": "2027-10-20T17:40:37.143Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_ga",
+            "value": "GA1.1.2118064583.1790358037",
+            "expires": "2027-10-30T17:40:36.985Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
           },
           {
             "key": "_gcl_au",
-            "value": "1.1.1945051727.1790341853",
-            "expires": "2026-12-24T13:10:53.000Z",
-            "domain": "hubspot.com",
+            "value": "1.1.1876450422.1790358037",
+            "expires": "2026-12-24T17:40:37.000Z",
+            "domain": "close.com",
             "path": "/",
             "hostOnly": false,
-            "creation": "2026-09-25T13:10:53.172Z",
-            "lastAccessed": "2026-09-25T13:10:53.172Z"
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_twsid",
+            "value": "1790358035940-278827037.1.1790358037142",
+            "expires": "2027-10-20T17:40:37.142Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_ga_BDW6YNZF6Y",
+            "value": "GS2.1.s1790358036$o1$g1$t1790358037$j59$l0$h1180819840",
+            "expires": "2027-10-30T17:40:37.147Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_fbp",
+            "value": "fb.1.1790358037192.574423053318630322",
+            "expires": "2026-12-24T17:40:37.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
+          },
+          {
+            "key": "_rdt_uuid",
+            "value": "1790358038456.e9508bbe-1c92-4a34-b91d-f6f49b07ed5a",
+            "expires": "2026-12-24T17:40:38.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:40.006Z",
+            "lastAccessed": "2026-09-25T17:40:40.006Z"
           }
         ]
       },
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:47.795Z",
-      "createdAt": "2026-09-25T13:10:47.795Z",
+      "expiresAt": "2026-09-25T18:29:48.213Z",
+      "createdAt": "2026-09-25T17:39:48.213Z",
       "usageCount": 1,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_ITCN0ny7oC",
+      "id": "session_5hkC5EqXdK",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -398,14 +546,14 @@
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:58.436Z",
-      "createdAt": "2026-09-25T13:10:58.436Z",
+      "expiresAt": "2026-09-25T18:30:44.550Z",
+      "createdAt": "2026-09-25T17:40:44.550Z",
       "usageCount": 0,
       "maxUsageCount": 50,
       "errorScore": 0
     },
     {
-      "id": "session_d64vwzju1c",
+      "id": "session_rWUP0JxJ8j",
       "cookieJar": {
         "version": "tough-cookie@6.0.2",
         "storeType": "MemoryCookieStore",
@@ -415,36 +563,352 @@
         "prefixSecurity": "silent",
         "cookies": [
           {
-            "key": "__cf_bm",
-            "value": "9E8sN4DNYY7mroJclbUwFJ71GmqxswUp8Xpuq.AXXrI-1790341860.5928395-1.0.1.1-TI08Jvs_11LyEYmeCS2UBYZBSaNulDXWxqGOfOqDLwaUgTGgbphyPzf_xVcT9Gy5H8gQaXxbMx0auAGJtBKphwXgpFUKG7mb_G1bJl05442u6uq6KiO1wmIZFlV1BZJl",
-            "expires": "2026-09-25T13:40:59.050Z",
-            "domain": "hubspot.com",
+            "key": "EXP_7799281eee_identity",
+            "value": "JTIyJTdCJTVDJTIyd2ViX2V4cF9pZF92MiU1QyUyMiUzQSU1QyUyMjI3MjQwMjc3LTYwYTYtNDcyYS05NmYxLWE2ZWEzYTJjNTU2OSU1QyUyMiUyQyU1QyUyMmZpcnN0X3NlZW4lNUMlMjIlM0ElNUMlMjIxNzkwMzU4MDQ1LjkwOSU1QyUyMiU3RCUyMg==",
+            "expires": "2027-09-25T17:40:45.000Z",
+            "domain": "close.com",
             "path": "/",
-            "secure": true,
-            "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:11:00.617Z",
-            "lastAccessed": "2026-09-25T13:11:00.617Z"
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
           },
           {
-            "key": "_cfuvid",
-            "value": "DPbgubbgQJOxXX7qwVG4cqYR8KwPlzk64racK8odZOA-1790341861.3192232-1.0.1.1-2qRF2n5RIaG7wOb59DRs_Awh9Q4g3r_x2TREM0HsOpw",
-            "expires": "2026-09-25T14:01:00.617Z",
-            "domain": "hubspot.com",
+            "key": "__obref",
+            "value": "4aa5ae59-f0a0-467f-9442-6da40c13833a",
+            "expires": "2027-09-25T17:40:46.107Z",
+            "domain": "close.com",
             "path": "/",
             "secure": true,
-            "httpOnly": true,
             "hostOnly": false,
-            "creation": "2026-09-25T13:11:00.617Z",
-            "lastAccessed": "2026-09-25T13:11:00.617Z"
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_uetsid",
+            "value": "3d1f4610b90811f19c862582cbc40581",
+            "expires": "2026-09-26T17:40:46.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_uetvid",
+            "value": "3d1f8570b90811f1a330b3118a209281",
+            "expires": "2027-10-20T17:40:46.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_clck",
+            "value": "1ctocnn%5E2%5Eg9r%5E0%5E2459",
+            "expires": "2027-09-25T17:40:46.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "ajs_anonymous_id",
+            "value": "87400f37-ace5-4ca8-b75a-45787831c0ed",
+            "expires": "2027-09-25T17:40:49.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_clsk",
+            "value": "1uc2uax%5E1790358048090%5E1%5E1%5Er.clarity.ms%2Fcollect",
+            "expires": "2026-09-26T17:40:48.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_ga",
+            "value": "GA1.1.816202564.1790358048",
+            "expires": "2027-10-30T17:40:48.346Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_twpid",
+            "value": "tw.1790358048539.661176376365409995",
+            "expires": "2027-10-20T17:40:48.542Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.939Z",
+            "lastAccessed": "2026-09-25T17:40:51.939Z"
+          },
+          {
+            "key": "_twsid",
+            "value": "1790358048539-2672672.1.1790358048541",
+            "expires": "2027-10-20T17:40:48.541Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
+          },
+          {
+            "key": "_ga_BDW6YNZF6Y",
+            "value": "GS2.1.s1790358048$o1$g1$t1790358049$j59$l0$h170084797",
+            "expires": "2027-10-30T17:40:49.336Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
+          },
+          {
+            "key": "_gcl_au",
+            "value": "1.1.119057352.1790358049.-.-.1790358049.381579906.1790358049.1790358049",
+            "expires": "2026-12-24T17:40:49.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
+          },
+          {
+            "key": "_fbp",
+            "value": "fb.1.1790358049483.739023297509200251",
+            "expires": "2026-12-24T17:40:49.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
+          },
+          {
+            "key": "_rdt_uuid",
+            "value": "1790358049745.abed420a-003b-440e-b5c5-8ffcf92d2710",
+            "expires": "2026-12-24T17:40:49.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
+          },
+          {
+            "key": "_rdt_pn",
+            "value": ":125~b892cf49e097c5c08f5bfa561c5ac152995d77b24a1a317cac8156902588f862",
+            "expires": "2026-12-24T17:40:51.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:40:51.940Z",
+            "lastAccessed": "2026-09-25T17:40:51.940Z"
           }
         ]
       },
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2026-09-25T14:00:58.437Z",
-      "createdAt": "2026-09-25T13:10:58.437Z",
+      "expiresAt": "2026-09-25T18:30:44.551Z",
+      "createdAt": "2026-09-25T17:40:44.551Z",
+      "usageCount": 1,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_McRbD9FRIw",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": []
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:30:58.495Z",
+      "createdAt": "2026-09-25T17:40:58.495Z",
+      "usageCount": 0,
+      "maxUsageCount": 50,
+      "errorScore": 0
+    },
+    {
+      "id": "session_ukbuq6a5j8",
+      "cookieJar": {
+        "version": "tough-cookie@6.0.2",
+        "storeType": "MemoryCookieStore",
+        "rejectPublicSuffixes": true,
+        "enableLooseMode": false,
+        "allowSpecialUseDomain": true,
+        "prefixSecurity": "silent",
+        "cookies": [
+          {
+            "key": "EXP_7799281eee_identity",
+            "value": "JTIyJTdCJTVDJTIyd2ViX2V4cF9pZF92MiU1QyUyMiUzQSU1QyUyMjA0M2RkMDhjLWIyMjktNGNmNS05ODExLWVkZGVjZjhjZDhmNiU1QyUyMiUyQyU1QyUyMmZpcnN0X3NlZW4lNUMlMjIlM0ElNUMlMjIxNzkwMzU4MDU5LjUwOSU1QyUyMiU3RCUyMg==",
+            "expires": "2027-09-25T17:40:59.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "__obref",
+            "value": "8df8a9ff-d291-4392-90d1-1e971972257d",
+            "expires": "2027-09-25T17:40:59.767Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_uetsid",
+            "value": "4553a900b90811f1b6b343ecaa37ce83",
+            "expires": "2026-09-26T17:40:59.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_uetvid",
+            "value": "4553c050b90811f19ed6ab66f2a6481a",
+            "expires": "2027-10-20T17:40:59.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_clck",
+            "value": "obm6fa%5E2%5Eg9r%5E0%5E2459",
+            "expires": "2027-09-25T17:41:00.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "ajs_anonymous_id",
+            "value": "b46a4c94-4d82-4920-ba59-1fecafaafc10",
+            "expires": "2027-09-25T17:41:01.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_ga",
+            "value": "GA1.1.867250768.1790358061",
+            "expires": "2027-10-30T17:41:00.813Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_twpid",
+            "value": "tw.1790358060828.435844722491779185",
+            "expires": "2027-10-20T17:41:00.830Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_twsid",
+            "value": "1790358060828-863121929.1.1790358060830",
+            "expires": "2027-10-20T17:41:00.830Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_clsk",
+            "value": "14jrluq%5E1790358061302%5E1%5E1%5Ee.clarity.ms%2Fcollect",
+            "expires": "2026-09-26T17:41:01.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_gcl_au",
+            "value": "1.1.1798164431.1790358061",
+            "expires": "2026-12-24T17:41:01.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.580Z",
+            "lastAccessed": "2026-09-25T17:41:02.580Z"
+          },
+          {
+            "key": "_ga_BDW6YNZF6Y",
+            "value": "GS2.1.s1790358060$o1$g1$t1790358061$j59$l0$h2131677103",
+            "expires": "2027-10-30T17:41:01.394Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.581Z",
+            "lastAccessed": "2026-09-25T17:41:02.581Z"
+          },
+          {
+            "key": "_fbp",
+            "value": "fb.1.1790358061502.563541052546140963",
+            "expires": "2026-12-24T17:41:01.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.581Z",
+            "lastAccessed": "2026-09-25T17:41:02.581Z"
+          },
+          {
+            "key": "_rdt_uuid",
+            "value": "1790358061561.a6d9a2b0-c681-4276-8054-be1efc4e3e62",
+            "expires": "2026-12-24T17:41:01.000Z",
+            "domain": "close.com",
+            "path": "/",
+            "secure": true,
+            "hostOnly": false,
+            "creation": "2026-09-25T17:41:02.581Z",
+            "lastAccessed": "2026-09-25T17:41:02.581Z"
+          }
+        ]
+      },
+      "userData": {},
+      "maxErrorScore": 3,
+      "errorScoreDecrement": 0.5,
+      "expiresAt": "2026-09-25T18:30:58.495Z",
+      "createdAt": "2026-09-25T17:40:58.495Z",
       "usageCount": 1,
       "maxUsageCount": 50,
       "errorScore": 0

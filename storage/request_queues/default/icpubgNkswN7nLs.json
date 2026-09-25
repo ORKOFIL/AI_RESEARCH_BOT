@@ -1,6 +1,6 @@
 {
 	"id": "icpubgNkswN7nLs",
-	"json": "{\"id\":\"icpubgNkswN7nLs\",\"url\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-pricing\",\"loadedUrl\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-pricing\",\"uniqueKey\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T13:10:20.420Z\"}",
+	"json": "{\"id\":\"icpubgNkswN7nLs\",\"url\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-pricing\",\"loadedUrl\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-pricing\",\"uniqueKey\":\"https://www.hubspot.com/pricing/marketing?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-pricing\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T17:38:43.494Z\"}",
 	"method": "GET",
 	"orderNo": null,
 	"retryCount": 0,
