@@ -24,7 +24,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '../../.env.local') });
 const graph = new StateGraph(AgentState)
     .addNode('planner', planner)
     .addNode('stepsController', stepsController, {
-        ends: ['infoFinalizer']
+        ends: ['infoFinalizer', 'errorHandlingNode']
     })
     .addNode('infoFinalizer', infoFinalizer)
     .addNode('errorHandlingNode', errorHandler)
