@@ -1,0 +1,9 @@
+{
+	"id": "6SIt7VunDLytlyW",
+	"json": "{\"id\":\"6SIt7VunDLytlyW\",\"url\":\"https://www.hubspot.com/products/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketing\",\"loadedUrl\":\"https://www.hubspot.com/products/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketing\",\"uniqueKey\":\"https://www.hubspot.com/products/marketing?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-software-marketing\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-26T09:05:04.062Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.hubspot.com/products/marketing?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-software-marketing",
+	"url": "https://www.hubspot.com/products/marketing?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketing"
+}

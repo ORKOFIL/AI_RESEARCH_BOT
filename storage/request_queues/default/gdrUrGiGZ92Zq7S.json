@@ -1,9 +1,0 @@
-{
-	"id": "gdrUrGiGZ92Zq7S",
-	"json": "{\"id\":\"gdrUrGiGZ92Zq7S\",\"url\":\"https://close.com/pricing\",\"loadedUrl\":\"https://close.com/pricing\",\"uniqueKey\":\"https://close.com/pricing\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T17:40:51.966Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://close.com/pricing",
-	"url": "https://close.com/pricing"
-}

@@ -17,7 +17,7 @@ import { AgentState } from '@/lib/agentState';
 import { planner } from '@/services/ai/planner';
 import { stepsController } from '@/services/ai/mainLogic';
 import { infoFinalizer } from '@/services/ai/finalizer';
-import {errorHandler} from '@/services/errors/errorHandler'
+import { errorHandler } from '@/services/errors/errorHandler'
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env.local') });
 
@@ -31,12 +31,6 @@ const graph = new StateGraph(AgentState)
     .addEdge(START, 'planner')
     .addEdge('planner', 'stepsController')
     .addEdge('infoFinalizer', END)
-
-
-// const graph = new StateGraph(AgentState)
-//     .addNode('planner', planner)
-//     .addEdge(START, 'planner')
-//     .addEdge('planner', END)
 
 const checkpointer = new MemorySaver()
 const app = graph.compile({ checkpointer })
@@ -100,11 +94,8 @@ worker.on('failed', async (job, err) => {
         updateResearchStatus('ERROR', job.data.taskId)
         const { error: dbError } = await supabaseAdmin
             .from('research_results')
-            .update({
-                status: 'ERROR',
-                output: `Критична помилка виконання: ${err.message}`
-            })
-            .eq('research_task_id', job.data.taskId);
+            .insert([{ research_task_id: job.data.taskId, title: job.data.title, content: `Дослідження перервано: ${err.message}` }])
+            .select()
         if (dbError) {
             console.error("Не вдалося записати статус ERROR в Supabase:", dbError.message);
         }

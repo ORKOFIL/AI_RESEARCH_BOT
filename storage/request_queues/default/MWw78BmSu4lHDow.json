@@ -1,6 +1,6 @@
 {
 	"id": "MWw78BmSu4lHDow",
-	"json": "{\"id\":\"MWw78BmSu4lHDow\",\"url\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketplace\",\"loadedUrl\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketplace\",\"uniqueKey\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-software-marketplace\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T17:39:10.129Z\"}",
+	"json": "{\"id\":\"MWw78BmSu4lHDow\",\"url\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketplace\",\"loadedUrl\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com/&hubs_content-cta=nav-software-marketplace\",\"uniqueKey\":\"https://ecosystem.hubspot.com/marketplace/apps?hubs_content=www.hubspot.com%2F&hubs_content-cta=nav-software-marketplace\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-26T09:05:15.935Z\"}",
 	"method": "GET",
 	"orderNo": null,
 	"retryCount": 0,

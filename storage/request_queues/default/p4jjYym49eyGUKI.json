@@ -1,9 +1,0 @@
-{
-	"id": "p4jjYym49eyGUKI",
-	"json": "{\"id\":\"p4jjYym49eyGUKI\",\"url\":\"https://www.pipedrive.com/\",\"loadedUrl\":\"https://www.pipedrive.com/\",\"uniqueKey\":\"https://www.pipedrive.com\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2026-09-25T17:39:21.834Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://www.pipedrive.com",
-	"url": "https://www.pipedrive.com/"
-}
