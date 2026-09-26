@@ -3,15 +3,8 @@ import dotenv from 'dotenv';
 import { Worker } from 'bullmq';
 import { redisConnection, RESEARCH_QUEUE_NAME } from '@/lib/queue';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { END, START, StateGraph, Annotation, MessagesAnnotation, MemorySaver, interrupt, Command } from "@langchain/langgraph";
-import { SystemMessage, HumanMessage, ToolMessage, AIMessage } from "@langchain/core/messages";
-import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { tool } from "@langchain/core/tools";
-import { ChatOpenAI } from "@langchain/openai";
-import { tvly } from '@/lib/tavilyClient';
-import * as z from "zod";
-import axios from 'axios';
-import { RestoreOriginalFunction } from 'next/dist/build/turborepo-access-trace/types';
+import { END, START, StateGraph, MemorySaver } from "@langchain/langgraph";
+import { HumanMessage } from "@langchain/core/messages";
 import { updateResearchStatus } from "@/services/supabase/updateStatus"
 import { AgentState } from '@/lib/agentState';
 import { planner } from '@/services/ai/planner';
@@ -91,7 +84,7 @@ worker.on('failed', async (job, err) => {
     console.error(`Job ${job?.id} failed with error:`, err.message);
 
     if (job?.data?.taskId) {
-        updateResearchStatus('ERROR', job.data.taskId)
+        await updateResearchStatus('ERROR', job.data.taskId)
         const { error: dbError } = await supabaseAdmin
             .from('research_results')
             .insert([{ research_task_id: job.data.taskId, title: job.data.title, content: `Дослідження перервано: ${err.message}` }])

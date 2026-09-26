@@ -6,7 +6,7 @@ import { updateResearchStatus } from "@/services/supabase/updateStatus"
 export async function errorHandler(state: typeof AgentState.State) {
     const errorText = state.error_message || "Критичний збій";
     try {
-        updateResearchStatus('ERROR', state.jobId)
+        await updateResearchStatus('ERROR', state.jobId)
         
         await supabaseAdmin
             .from('research_results')
