@@ -1,5 +1,5 @@
 import { AgentState } from '@/lib/agentState';
-import { prisma } from '@/lib/prisma';
+import { setOutput } from '@/lib/researchStore';
 import { Command, END } from "@langchain/langgraph";
 import { updateResearchStatus } from "@/services/research/updateStatus"
 
@@ -8,12 +8,10 @@ export async function errorHandler(state: typeof AgentState.State) {
     try {
         await updateResearchStatus('ERROR', state.jobId)
         
-        await prisma.researchResult.create({
-            data: { researchTaskId: state.jobId, title: state.jobTitle, content: `Дослідження перервано: ${errorText}` },
-        });
+        await setOutput(state.jobId, `Дослідження перервано: ${errorText}`);
 
     } catch (dbError) {
-        console.error("Не вдалося зберегти помилку в БД:", dbError);
+        console.error("Не вдалося зберегти помилку:", dbError);
     }
 
     return new Command({

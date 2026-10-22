@@ -2,7 +2,7 @@ import { HumanMessage } from '@langchain/core/messages';
 import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import { updateResearchStatus } from "@/services/research/updateStatus"
-import { prisma } from '@/lib/prisma';
+import { setOutput } from '@/lib/researchStore';
 import { Command } from "@langchain/langgraph";
 
 const baseModel = new ChatOpenAI({
@@ -47,9 +47,7 @@ export async function infoFinalizer(state: typeof AgentState.State) {
         }
     }
     try {
-        await prisma.researchResult.create({
-            data: { researchTaskId: state.jobId, title: state.jobTitle, content: String(response.content) },
-        });
+        await setOutput(state.jobId, String(response.content));
     } catch (error) {
         console.error('Error inserting finalized info:', error);
         throw error;

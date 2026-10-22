@@ -2,7 +2,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { Worker } from 'bullmq';
 import { redisConnection, RESEARCH_QUEUE_NAME } from '@/lib/queue';
-import { prisma } from '@/lib/prisma';
+import { setOutput, setStatus } from '@/lib/researchStore';
 import { END, START, StateGraph, MemorySaver } from "@langchain/langgraph";
 import { HumanMessage } from "@langchain/core/messages";
 import { updateResearchStatus } from "@/services/research/updateStatus"
@@ -30,10 +30,7 @@ const app = graph.compile({ checkpointer })
 
 const worker = new Worker(RESEARCH_QUEUE_NAME, async (job) => {
     try {
-        await prisma.researchTask.update({
-            where: { id: job.data.taskId },
-            data: { status: 'planning' },
-        });
+        await setStatus(job.data.taskId, 'planning');
 
     } catch (error) {
         console.error('Error updating status: ', error);
@@ -74,11 +71,9 @@ worker.on('failed', async (job, err) => {
     if (job?.data?.taskId) {
         await updateResearchStatus('ERROR', job.data.taskId)
         try {
-            await prisma.researchResult.create({
-                data: { researchTaskId: job.data.taskId, title: job.data.title, content: `Дослідження перервано: ${err.message}` },
-            });
+            await setOutput(job.data.taskId, `Дослідження перервано: ${err.message}`);
         } catch (dbError) {
-            console.error("Не вдалося записати статус ERROR в БД:", dbError);
+            console.error("Не вдалося записати результат ERROR:", dbError);
         }
     }
 })

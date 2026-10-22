@@ -12,7 +12,7 @@
  Браузер (Next.js UI)
         │  POST /api/research
         ▼
- Next.js API route ──► PostgreSQL (задача: status = "pending")
+ Next.js API route ──► Redis (задача: status = "pending")
         │
         └──► Черга BullMQ (Redis)
                     │
@@ -30,7 +30,7 @@
         │                      • not_found → повтор із  │
         │                        синонімами запиту      │
         │ infoFinalizer    – LLM формує фінальний       │
-        │                    звіт у Markdown → БД       │
+        │                    звіт у Markdown → Redis    │
         │ errorHandler     – зберігає помилки           │
         └───────────────────────────────────────────────┘
                     │
@@ -38,7 +38,7 @@
                  GET /api/output/:id  (фінальний звіт)
 ```
 
-1. UI надсилає запит на дослідження. API зберігає задачу в PostgreSQL і додає job у Redis, тому відповідь повертається одразу.
+1. UI надсилає запит на дослідження. API зберігає задачу в Redis і додає job у чергу, тому відповідь повертається одразу.
 2. Окремий процес-воркер бере job із черги й запускає граф агента на **LangGraph**.
 3. **planner** перетворює мету користувача на впорядкований список кроків (ціни, функції, аудиторія тощо).
 4. Для кожного сайту і кожного кроку **stepsController** скрапить сторінку через **Playwright** (cookie-банери, скрипти й трекінгові параметри прибираються, посилання перетворюються на Markdown) і запитує LLM зі *structured output* (схема Zod): чи є на сторінці відповідь, посилання на відповідь, чи нічого. Якщо повернуто посилання — агент переходить за ним; якщо нічого не знайдено — повторює пошук із синонімами від LLM. Кількість циклів обмежена.
@@ -53,28 +53,27 @@
 | AI-оркестрація | LangGraph, LangChain, OpenAI (`gpt-4o-mini`), Zod structured output |
 | Веб-скрапінг | Playwright через Crawlee |
 | Черга | BullMQ + Redis |
-| База даних | PostgreSQL 17 + Prisma 7 (`@prisma/adapter-pg`) |
-| Інфраструктура | Docker Compose (PostgreSQL і Redis працюють у контейнерах) |
+| Сховище задач і результатів | Redis (ioredis) |
+| Інфраструктура | Docker Compose (Redis працює в контейнері) |
 | Інструменти | ESLint, Vitest, tsx |
 
 ## Структура проєкту
 
 ```
-prisma/                  Схема Prisma та міграції
 src/
   app/
     research/page.tsx    UI (форма, прогрес наживо, Markdown-результат)
     api/research         створення задачі + додавання job у чергу
     api/status/[id]      статус задачі (опитується з UI)
     api/output/[id]      фінальний звіт
-  lib/                   клієнт Prisma, черга BullMQ, стан LangGraph
+  lib/                   черга BullMQ, сховище задач у Redis, стан LangGraph
   services/
     ai/                  planner, контролер кроків, finalizer
     browser/parser.ts    Playwright: сторінка → чистий Markdown
     errors/              вузол обробки помилок
-    research/            робота з БД (створення задачі, оновлення статусу)
+    research/            створення задачі, оновлення статусу
   workers/researchWorker.ts   споживач черги, що запускає граф агента
-docker-compose.yml       PostgreSQL + Redis
+docker-compose.yml       Redis
 ```
 
 ---
@@ -92,7 +91,7 @@ docker-compose.yml       PostgreSQL + Redis
 | Docker + Docker Compose | свіжа | `docker compose version` |
 | Ключ OpenAI API | — | https://platform.openai.com/api-keys |
 
-> PostgreSQL і Redis **не потрібно** встановлювати — їх запускає Docker. Переконайтеся, що Docker запущений (на macOS/Windows має бути відкритий Docker Desktop).
+> Redis **не потрібно** встановлювати — його запускає Docker. Переконайтеся, що Docker запущений (на macOS/Windows має бути відкритий Docker Desktop).
 
 ### Покроково
 
@@ -105,8 +104,6 @@ git clone https://github.com/ORKOFIL/AI_RESEARCH_BOT.git
 cd AI_RESEARCH_BOT
 npm install
 ```
-
-(`npm install` також автоматично генерує клієнт Prisma.)
 
 **2. Встановіть браузер для скрапера**
 
@@ -130,27 +127,21 @@ Windows (PowerShell):
 copy .env.example .env.local
 ```
 
-Відкрийте `.env.local` і замініть `OPENAI_API_KEY="sk-..."` на ваш справжній ключ. Інші значення залиште як є — вони вже відповідають `docker-compose.yml`.
+Відкрийте `.env.local` і замініть `OPENAI_API_KEY="sk-..."` на ваш справжній ключ. Друге значення залиште як є — воно вже відповідає `docker-compose.yml`.
 
-**4. Запустіть PostgreSQL і Redis**
+**4. Запустіть Redis**
 
 ```bash
-npm run db:up
+npm run redis:up
 ```
 
-Під час першого запуску завантажуються образи, це може тривати хвилину. Перевірте, що обидва контейнери працюють:
+Під час першого запуску завантажується образ, це може тривати хвилину. Перевірте, що контейнер працює:
 
 ```bash
 docker compose ps
 ```
 
-**5. Створіть таблиці в базі даних**
-
-```bash
-npx prisma migrate deploy
-```
-
-**6. Запустіть застосунок (у двох терміналах)**
+**5. Запустіть застосунок (у двох терміналах)**
 
 Термінал 1 — веб-застосунок:
 
@@ -164,26 +155,25 @@ npm run dev
 npm run worker:research
 ```
 
-**7. Користуйтеся**
+**6. Користуйтеся**
 
 Відкрийте http://localhost:3000, заповніть форму (можна скопіювати приклад під формою) і натисніть **Почати дослідження**. Прогрес відображається праворуч; коли дослідження завершиться, замість нього з'явиться звіт.
 
 ### Зупинка
 
 ```bash
-docker compose down        # зупинити контейнери (дані лишаються у Docker volume)
-docker compose down -v     # зупинити контейнери І видалити дані бази
+docker compose down        # зупинити контейнер
 ```
 
 ### Вирішення проблем
 
 | Проблема | Рішення |
 |---|---|
-| `port is already allocated` / `address already in use` | Порт зайнятий іншим сервісом. Змініть ліве число в `docker-compose.yml` (наприклад, `"5434:5432"` → `"5440:5432"`) і порт у `DATABASE_URL`. Для Redis так само змініть `6379` і `REDIS_URL`. |
+| `port is already allocated` / `address already in use` | Порт зайнятий іншим сервісом. Змініть ліве число в `docker-compose.yml` (наприклад, `"6379:6379"` → `"6380:6379"`) і відповідно `REDIS_URL` у `.env.local`. |
 | Статус завис на `pending` | Воркер не запущений — запустіть `npm run worker:research` у другому терміналі. |
 | Воркер падає з помилкою OpenAI / 401 | `OPENAI_API_KEY` у `.env.local` відсутній або недійсний. Після виправлення перезапустіть воркер. |
 | `Executable doesn't exist` від Playwright | Виконайте `npx playwright install chromium` (крок 2). |
-| Prisma не підключається до бази | Перевірте, що `docker compose ps` показує `postgres` як running і що порт у `DATABASE_URL` у `.env.local` збігається з портом у `docker-compose.yml`. |
+| Помилка підключення до Redis (`ECONNREFUSED`) | Перевірте, що `docker compose ps` показує `redis` як running і що порт у `REDIS_URL` збігається з `docker-compose.yml`. |
 
 ## Корисні команди
 
@@ -191,8 +181,7 @@ docker compose down -v     # зупинити контейнери І видал
 |---|---|
 | `npm run dev` | Запустити dev-сервер Next.js |
 | `npm run worker:research` | Запустити воркер черги |
-| `npm run db:up` | Запустити PostgreSQL і Redis у Docker |
-| `npm run db:migrate` | Створити/застосувати міграцію після змін у `prisma/schema.prisma` (розробка) |
+| `npm run redis:up` | Запустити Redis у Docker |
 | `npm run build` / `npm start` | Продакшн-збірка / запуск |
 | `npm run lint` | Перевірка коду лінтером |
 | `npm test` | Запустити тести (Vitest) |

@@ -41,9 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma generated client
-/src/generated
-
 # crawlee local storage (created by the scraper)
 /storage
 
