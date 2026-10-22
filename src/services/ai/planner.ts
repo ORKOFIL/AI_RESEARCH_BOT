@@ -2,7 +2,7 @@ import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import * as z from "zod";
-import { updateResearchStatus } from "@/services/supabase/updateStatus"
+import { updateResearchStatus } from "@/services/research/updateStatus"
 import { Command } from "@langchain/langgraph";
 
 const baseModel = new ChatOpenAI({
@@ -43,8 +43,6 @@ export async function planner(state: typeof AgentState.State) {
     try {
         const response = await structmodel.invoke([...state.messages, humanMsg])
 
-        console.log(response)
-
         return {
             steps: response.steps,
             messages: [new AIMessage(JSON.stringify(response))]
@@ -52,7 +50,6 @@ export async function planner(state: typeof AgentState.State) {
     } catch (error) {
         console.error("OpenAI API Error:", error)
         if (state.errorRetries < 3) {
-            console.log(`Повторна спроба... (${state.errorRetries + 1}/3)`);
             return new Command({
                 update: { errorRetries: state.errorRetries + 1 },
                 goto: "planner"

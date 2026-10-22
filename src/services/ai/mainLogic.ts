@@ -4,7 +4,7 @@ import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
 import { Command } from "@langchain/langgraph";
 import { scrapePage } from "@/services/browser/parser"
-import { updateResearchStatus } from "@/services/supabase/updateStatus"
+import { updateResearchStatus } from "@/services/research/updateStatus"
 
 const baseModel = new ChatOpenAI({
     modelName: "gpt-4o-mini",
@@ -23,12 +23,9 @@ async function getSynonim(goal: string) {
 }
 
 export async function stepsController(state: typeof AgentState.State) {
-    console.log('[STEPS CONTROLLER] Started work')
-    console.log(state.steps[state.currentStep])
     const { id, goal } = state.steps[state.currentStep]
     if (state.currentStep == 0) await updateResearchStatus(`getting info from ${state.links[state.currentLink]}`, state.jobId)
     const currentLink = state.secondaryLink.secondUrl == null ? state.links[state.currentLink] : state.secondaryLink.secondUrl
-    console.log(currentLink)
 
     let synonimGoal = ''
     let oldMarkdown = state.oldMarkdown ?? ''
@@ -39,7 +36,6 @@ export async function stepsController(state: typeof AgentState.State) {
         if (state.currentStep == 0) {
             const { cleanMarkdown, resp } = await scrapePage(currentLink)
             if (resp.requestsFailed != 0) {
-                console.log('\n\nERROR\n\n')
                 return new Command({
                     update: {
                         stepInfo: { url: state.links[state.currentLink], step_id: id, info: 'THIS LINK IS INCORRECT' },
@@ -93,7 +89,6 @@ export async function stepsController(state: typeof AgentState.State) {
     )
     try {
         const response = await structmodel.invoke([humanMsg])
-        console.log(response)
 
         if (response.status == 'content_found' || (response.status == 'not_found' && state.secondaryLink.notfound >= 2) || state.loop >= 2) {
             if (state.currentStep < state.steps.length - 1) {
@@ -120,9 +115,6 @@ export async function stepsController(state: typeof AgentState.State) {
                     goto: 'stepsController'
                 })
             } else if (state.currentLink >= state.links.length - 1) {
-                console.log('==================== FINALISED ====================')
-                console.log(state.stepInfo)
-                console.log('===================================================')
                 return new Command({
                     update: {
                         stepInfo: { url: state.links[state.currentLink], step_id: id, info: response.status == 'not_found' ? response.reasoning : response.extractedContent },
@@ -157,7 +149,6 @@ export async function stepsController(state: typeof AgentState.State) {
     } catch (error) {
         console.error("OpenAI API Error:", error)
         if (state.errorRetries < 3) {
-            console.log(`Повторна спроба... (${state.errorRetries + 1}/3)`);
             return new Command({
                 update: { errorRetries: state.errorRetries + 1 },
                 goto: "stepsController"

@@ -1,7 +1,21 @@
-version: '3.8'
 services:
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
     restart: always
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_research_bot
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:

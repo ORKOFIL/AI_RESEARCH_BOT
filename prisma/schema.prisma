@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ResearchTask {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String
+  goal      String
+  sources   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  results ResearchResult[]
+
+  @@map("research_tasks")
+}
+
+model ResearchResult {
+  id             String   @id @default(uuid()) @db.Uuid
+  researchTaskId String   @map("research_task_id") @db.Uuid
+  title          String
+  content        String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  researchTask ResearchTask @relation(fields: [researchTaskId], references: [id], onDelete: Cascade)
+
+  @@map("research_results")
+}

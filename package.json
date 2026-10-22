@@ -8,16 +8,17 @@
     "start": "next start",
     "lint": "eslint",
     "worker:research": "tsx --env-file=.env.local src/workers/researchWorker.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "db:up": "docker compose up -d postgres redis",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@langchain/core": "^1.2.10",
     "@langchain/langgraph": "^1.4.14",
     "@langchain/openai": "^1.5.12",
-    "@supabase/ssr": "^0.12.7",
-    "@supabase/supabase-js": "^2.116.0",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
     "@tanstack/react-query": "^5.103.2",
     "@tavily/core": "^0.7.10",
     "axios": "^1.20.0",
@@ -31,7 +32,8 @@
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -41,6 +43,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "playwright": "^1.63.0",
+    "prisma": "^7.10.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "typescript": "^5",

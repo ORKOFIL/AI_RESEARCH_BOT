@@ -10,14 +10,13 @@ export interface ScrapeResult {
 export async function scrapePage(url: string): Promise<ScrapeResult> {
   let cleanMarkdown = "";
 
-  // 1. Вимикаємо збереження файлів у storage через глобальний конфіг
-  Configuration.getGlobalConfig().set("persistStorage");
-
   const crawler = new PlaywrightCrawler({
     maxRequestsPerCrawl: 1,
 
     async requestHandler({ page }) {
       await page.waitForLoadState("domcontentloaded");
+      // Даємо JS-сайтам дорендерити контент, але не чекаємо вічно
+      await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
 
       cleanMarkdown = await page.evaluate(`
         (() => {
@@ -29,7 +28,11 @@ export async function scrapePage(url: string): Promise<ScrapeResult> {
           "[class*='consent']", "[id*='consent']"
         ];
           elementsToRemove.forEach((selector) => {
-            document.querySelectorAll(selector).forEach((el) => el.remove());
+            document.querySelectorAll(selector).forEach((el) => {
+              // Селектори [class*='cookie'] можуть збігтися з body/обгорткою всієї сторінки
+              const wrapsPage = el === document.body || el === document.documentElement || el.contains(document.body) || el.querySelector("main, h1");
+              if (!wrapsPage) el.remove();
+            });
           });
 
           // Очищення тільки UTM-міток без обрізання query-параметрів та якорів
@@ -60,7 +63,7 @@ export async function scrapePage(url: string): Promise<ScrapeResult> {
             const text = rawText.replace(/\\s+/g, " ").trim();
             let href = a.href;
 
-            const isSocial = /(facebook|twitter|instagram|linkedin|youtube|github|t.me)\\.com/i.test(href);
+            const isSocial = /^https?:\\/\\/(([^/]*\\.)?(facebook|twitter|x|instagram|linkedin|youtube|github)\\.com|t\\.me)(\\/|$)/i.test(href);
             const isValid = text.length > 1 && href.startsWith("http") && !isSocial;
 
             if (isValid) {
@@ -81,7 +84,10 @@ export async function scrapePage(url: string): Promise<ScrapeResult> {
           // 3. Обробка заголовків
           document.querySelectorAll("h1, h2, h3").forEach((h) => {
             const level = h.tagName.toLowerCase() === "h1" ? "# " : h.tagName.toLowerCase() === "h2" ? "## " : "### ";
-            h.replaceWith(document.createTextNode("\\n\\n" + level + (h.textContent ? h.textContent.trim() : "") + "\\n"));
+            // Блоковий елемент, бо innerText згортає \\n у текстових вузлах
+            const block = document.createElement("div");
+            block.textContent = level + (h.textContent ? h.textContent.trim() : "");
+            h.replaceWith(block);
           });
 
           // 4. Очищений текст

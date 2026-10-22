@@ -1,36 +1,205 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Research Bot
 
-## Getting Started
+Автономний агент для веб-досліджень. Ви описуєте, **що хочете дізнатися**, і надаєте **список сайтів**. Агент складає план дослідження, відвідує сайти (за потреби переходить по внутрішніх посиланнях), витягує потрібні факти за допомогою LLM і повертає структурований звіт у Markdown із посиланнями на джерела.
 
-First, run the development server:
+> Приклад: *«Порівняй HubSpot, Pipedrive і Close — цільова аудиторія, початкова ціна, ключові функції, інтеграції, безкоштовний план»* → структурований звіт по кожній компанії з посиланням на джерело для кожного твердження.
+
+---
+
+## Як це працює
+
+```
+ Браузер (Next.js UI)
+        │  POST /api/research
+        ▼
+ Next.js API route ──► PostgreSQL (задача: status = "pending")
+        │
+        └──► Черга BullMQ (Redis)
+                    │
+                    ▼
+        Фоновий воркер (state machine на LangGraph)
+        ┌───────────────────────────────────────────────┐
+        │ planner          – LLM розбиває мету на       │
+        │                    кроки дослідження          │
+        │ stepsController  – для кожного сайту і кроку: │
+        │                    Playwright скрапить        │
+        │                    сторінку → LLM вирішує:    │
+        │                      • content_found          │
+        │                      • link_found → перейти   │
+        │                        за посиланням          │
+        │                      • not_found → повтор із  │
+        │                        синонімами запиту      │
+        │ infoFinalizer    – LLM формує фінальний       │
+        │                    звіт у Markdown → БД       │
+        │ errorHandler     – зберігає помилки           │
+        └───────────────────────────────────────────────┘
+                    │
+ Браузер опитує  GET /api/status/:id  (прогрес)
+                 GET /api/output/:id  (фінальний звіт)
+```
+
+1. UI надсилає запит на дослідження. API зберігає задачу в PostgreSQL і додає job у Redis, тому відповідь повертається одразу.
+2. Окремий процес-воркер бере job із черги й запускає граф агента на **LangGraph**.
+3. **planner** перетворює мету користувача на впорядкований список кроків (ціни, функції, аудиторія тощо).
+4. Для кожного сайту і кожного кроку **stepsController** скрапить сторінку через **Playwright** (cookie-банери, скрипти й трекінгові параметри прибираються, посилання перетворюються на Markdown) і запитує LLM зі *structured output* (схема Zod): чи є на сторінці відповідь, посилання на відповідь, чи нічого. Якщо повернуто посилання — агент переходить за ним; якщо нічого не знайдено — повторює пошук із синонімами від LLM. Кількість циклів обмежена.
+5. **finalizer** об'єднує зібране в один звіт і зберігає його. Помилки перехоплюються на всіх рівнях (повтори запитів до LLM, недоступні сторінки, збій job) і записуються як результат із помилкою.
+6. Фронтенд опитує endpoint статусу, показує прогрес наживо й відображає готовий звіт як Markdown (разом із таблицями).
+
+## Технологічний стек
+
+| Область | Технології |
+|---|---|
+| Frontend / API | Next.js 16 (App Router), React 19, TypeScript |
+| AI-оркестрація | LangGraph, LangChain, OpenAI (`gpt-4o-mini`), Zod structured output |
+| Веб-скрапінг | Playwright через Crawlee |
+| Черга | BullMQ + Redis |
+| База даних | PostgreSQL 17 + Prisma 7 (`@prisma/adapter-pg`) |
+| Інфраструктура | Docker Compose (PostgreSQL і Redis працюють у контейнерах) |
+| Інструменти | ESLint, Vitest, tsx |
+
+## Структура проєкту
+
+```
+prisma/                  Схема Prisma та міграції
+src/
+  app/
+    research/page.tsx    UI (форма, прогрес наживо, Markdown-результат)
+    api/research         створення задачі + додавання job у чергу
+    api/status/[id]      статус задачі (опитується з UI)
+    api/output/[id]      фінальний звіт
+  lib/                   клієнт Prisma, черга BullMQ, стан LangGraph
+  services/
+    ai/                  planner, контролер кроків, finalizer
+    browser/parser.ts    Playwright: сторінка → чистий Markdown
+    errors/              вузол обробки помилок
+    research/            робота з БД (створення задачі, оновлення статусу)
+  workers/researchWorker.ts   споживач черги, що запускає граф агента
+docker-compose.yml       PostgreSQL + Redis
+```
+
+---
+
+## Встановлення (локально)
+
+### Що потрібно мати
+
+Встановіть це один раз:
+
+| Інструмент | Версія | Перевірка |
+|---|---|---|
+| Node.js | 20.19+ (рекомендовано 22) | `node -v` |
+| npm | йде разом із Node | `npm -v` |
+| Docker + Docker Compose | свіжа | `docker compose version` |
+| Ключ OpenAI API | — | https://platform.openai.com/api-keys |
+
+> PostgreSQL і Redis **не потрібно** встановлювати — їх запускає Docker. Переконайтеся, що Docker запущений (на macOS/Windows має бути відкритий Docker Desktop).
+
+### Покроково
+
+Виконуйте всі команди в терміналі, по черзі.
+
+**1. Клонуйте репозиторій і встановіть залежності**
+
+```bash
+git clone https://github.com/ORKOFIL/AI_RESEARCH_BOT.git
+cd AI_RESEARCH_BOT
+npm install
+```
+
+(`npm install` також автоматично генерує клієнт Prisma.)
+
+**2. Встановіть браузер для скрапера**
+
+```bash
+npx playwright install chromium
+```
+
+На Linux можуть знадобитися додаткові системні бібліотеки: `npx playwright install-deps chromium`.
+
+**3. Створіть файл змінних оточення**
+
+macOS / Linux:
+
+```bash
+cp .env.example .env.local
+```
+
+Windows (PowerShell):
+
+```powershell
+copy .env.example .env.local
+```
+
+Відкрийте `.env.local` і замініть `OPENAI_API_KEY="sk-..."` на ваш справжній ключ. Інші значення залиште як є — вони вже відповідають `docker-compose.yml`.
+
+**4. Запустіть PostgreSQL і Redis**
+
+```bash
+npm run db:up
+```
+
+Під час першого запуску завантажуються образи, це може тривати хвилину. Перевірте, що обидва контейнери працюють:
+
+```bash
+docker compose ps
+```
+
+**5. Створіть таблиці в базі даних**
+
+```bash
+npx prisma migrate deploy
+```
+
+**6. Запустіть застосунок (у двох терміналах)**
+
+Термінал 1 — веб-застосунок:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Термінал 2 — фоновий воркер (саме він виконує дослідження):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run worker:research
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**7. Користуйтеся**
 
-## Learn More
+Відкрийте http://localhost:3000, заповніть форму (можна скопіювати приклад під формою) і натисніть **Почати дослідження**. Прогрес відображається праворуч; коли дослідження завершиться, замість нього з'явиться звіт.
 
-To learn more about Next.js, take a look at the following resources:
+### Зупинка
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose down        # зупинити контейнери (дані лишаються у Docker volume)
+docker compose down -v     # зупинити контейнери І видалити дані бази
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Вирішення проблем
 
-## Deploy on Vercel
+| Проблема | Рішення |
+|---|---|
+| `port is already allocated` / `address already in use` | Порт зайнятий іншим сервісом. Змініть ліве число в `docker-compose.yml` (наприклад, `"5434:5432"` → `"5440:5432"`) і порт у `DATABASE_URL`. Для Redis так само змініть `6379` і `REDIS_URL`. |
+| Статус завис на `pending` | Воркер не запущений — запустіть `npm run worker:research` у другому терміналі. |
+| Воркер падає з помилкою OpenAI / 401 | `OPENAI_API_KEY` у `.env.local` відсутній або недійсний. Після виправлення перезапустіть воркер. |
+| `Executable doesn't exist` від Playwright | Виконайте `npx playwright install chromium` (крок 2). |
+| Prisma не підключається до бази | Перевірте, що `docker compose ps` показує `postgres` як running і що порт у `DATABASE_URL` у `.env.local` збігається з портом у `docker-compose.yml`. |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Корисні команди
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Команда | Опис |
+|---|---|
+| `npm run dev` | Запустити dev-сервер Next.js |
+| `npm run worker:research` | Запустити воркер черги |
+| `npm run db:up` | Запустити PostgreSQL і Redis у Docker |
+| `npm run db:migrate` | Створити/застосувати міграцію після змін у `prisma/schema.prisma` (розробка) |
+| `npm run build` / `npm start` | Продакшн-збірка / запуск |
+| `npm run lint` | Перевірка коду лінтером |
+| `npm test` | Запустити тести (Vitest) |
+
+## Архітектурні рішення
+
+- **Асинхронність за задумом** — довгі дослідження не блокують HTTP-запит; черга з повторами (BullMQ) відокремлює API від агента.
+- **Детермінований потік агента** — агент є явною state machine на LangGraph з обмеженими циклами та лічильниками повторів, а не вільним циклом промптів.
+- **Структурований вивід LLM** — кожне рішення моделі валідується за схемою Zod.
+- **Обґрунтовані відповіді** — фінальний звіт будується лише з фактів, витягнутих із наданих сайтів (finalizer сам нічого не відвідує), і кожен факт прив'язаний до URL, звідки він узятий.

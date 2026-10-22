@@ -1,8 +1,8 @@
 import { HumanMessage } from '@langchain/core/messages';
 import { AgentState } from "@/lib/agentState";
 import { ChatOpenAI } from "@langchain/openai";
-import { updateResearchStatus } from "@/services/supabase/updateStatus"
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { updateResearchStatus } from "@/services/research/updateStatus"
+import { prisma } from '@/lib/prisma';
 import { Command } from "@langchain/langgraph";
 
 const baseModel = new ChatOpenAI({
@@ -11,9 +11,6 @@ const baseModel = new ChatOpenAI({
 });
 
 export async function infoFinalizer(state: typeof AgentState.State) {
-    console.log('[infoFinalizer] started')
-    console.log(state.stepInfo)
-
     updateResearchStatus('summarizing information', state.jobId)
 
     const rawDataString = typeof state.stepInfo === 'string'
@@ -35,7 +32,6 @@ export async function infoFinalizer(state: typeof AgentState.State) {
     } catch (error) {
         console.error("OpenAI API Error:", error)
         if (state.errorRetries < 3) {
-            console.log(`Повторна спроба... (${state.errorRetries + 1}/3)`);
             return new Command({
                 update: { errorRetries: state.errorRetries + 1 },
                 goto: "infoFinalizer"
@@ -51,16 +47,9 @@ export async function infoFinalizer(state: typeof AgentState.State) {
         }
     }
     try {
-        const { error, data } = await supabaseAdmin
-            .from('research_results')
-            .insert([{ research_task_id: state.jobId, title: state.jobTitle, content: response.content }])
-            .select()
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-            throw new Error('Failed to create research task: empty response');
-        }
+        await prisma.researchResult.create({
+            data: { researchTaskId: state.jobId, title: state.jobTitle, content: String(response.content) },
+        });
     } catch (error) {
         console.error('Error inserting finalized info:', error);
         throw error;
