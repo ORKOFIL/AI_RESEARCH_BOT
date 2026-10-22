@@ -57,7 +57,6 @@
 | Черга | BullMQ + Redis |
 | Сховище задач і результатів | Redis (ioredis) |
 | Інфраструктура | Docker Compose (Redis працює в контейнері) |
-| Інструменти | ESLint, Vitest, tsx |
 
 ## Структура проєкту
 
@@ -84,16 +83,12 @@ docker-compose.yml       Redis
 
 ### Що потрібно мати
 
-Встановіть це один раз:
-
-| Інструмент | Версія | Перевірка |
-|---|---|---|
-| Node.js | 20.19+ (рекомендовано 22) | `node -v` |
-| npm | йде разом із Node | `npm -v` |
-| Docker + Docker Compose | свіжа | `docker compose version` |
-| Ключ OpenAI API | — | https://platform.openai.com/api-keys |
-
-> Redis **не потрібно** встановлювати — його запускає Docker. Переконайтеся, що Docker запущений (на macOS/Windows має бути відкритий Docker Desktop).
+| Інструмент | Версія |
+|---|---|
+| Node.js | 20.19+ (рекомендовано 22) | 
+| npm | йде разом із Node | 
+| Docker + Docker Compose | остання | 
+| Ключ OpenAI API | — |
 
 ### Покроково
 
@@ -137,7 +132,7 @@ copy .env.example .env.local
 npm run redis:up
 ```
 
-Під час першого запуску завантажується образ, це може тривати хвилину. Перевірте, що контейнер працює:
+Перевірте, що контейнер працює:
 
 ```bash
 docker compose ps
@@ -166,27 +161,6 @@ npm run worker:research
 ```bash
 docker compose down        # зупинити контейнер
 ```
-
-### Вирішення проблем
-
-| Проблема | Рішення |
-|---|---|
-| `port is already allocated` / `address already in use` | Порт зайнятий іншим сервісом. Змініть ліве число в `docker-compose.yml` (наприклад, `"6379:6379"` → `"6380:6379"`) і відповідно `REDIS_URL` у `.env.local`. |
-| Статус завис на `pending` | Воркер не запущений — запустіть `npm run worker:research` у другому терміналі. |
-| Воркер падає з помилкою OpenAI / 401 | `OPENAI_API_KEY` у `.env.local` відсутній або недійсний. Після виправлення перезапустіть воркер. |
-| `Executable doesn't exist` від Playwright | Виконайте `npx playwright install chromium` (крок 2). |
-| Помилка підключення до Redis (`ECONNREFUSED`) | Перевірте, що `docker compose ps` показує `redis` як running і що порт у `REDIS_URL` збігається з `docker-compose.yml`. |
-
-## Корисні команди
-
-| Команда | Опис |
-|---|---|
-| `npm run dev` | Запустити dev-сервер Next.js |
-| `npm run worker:research` | Запустити воркер черги |
-| `npm run redis:up` | Запустити Redis у Docker |
-| `npm run build` / `npm start` | Продакшн-збірка / запуск |
-| `npm run lint` | Перевірка коду лінтером |
-| `npm test` | Запустити тести (Vitest) |
 
 ## Архітектурні рішення
 
