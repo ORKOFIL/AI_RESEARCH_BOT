@@ -6,6 +6,8 @@
 
 ---
 
+<img width="1920" height="1080" alt="Pasted image" src="https://github.com/user-attachments/assets/71cb1d7b-c5db-4a5b-9e9e-aea9159c0878" />
+
 ## Як це працює
 
 ```
